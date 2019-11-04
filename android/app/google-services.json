@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "937786460707",
+    "firebase_url": "https://pocket-personal-1543965339641.firebaseio.com",
+    "project_id": "pocket-personal--1543965339641",
+    "storage_bucket": "pocket-personal--1543965339641.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:937786460707:android:e59fc4d9f2fdb4aea87f96",
+        "android_client_info": {
+          "package_name": "br.com.silva.mini_pocket_personal_trainer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "937786460707-01bbjorpek2t19m217n13dtqcp4cdj44.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqqJIpg7TMdUDj_1XO-uxSfcnVdR4fTR0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "937786460707-01bbjorpek2t19m217n13dtqcp4cdj44.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
