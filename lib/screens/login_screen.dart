@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mini_pocket_personal_trainer/models/user_model.dart';
 import 'package:mini_pocket_personal_trainer/screens/home_screen.dart';
 import 'package:mini_pocket_personal_trainer/screens/signup_screen.dart';
+import 'package:mini_pocket_personal_trainer/widgets/custom_google_button.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -15,9 +17,11 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _senhaController = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  Position _position;
 
   @override
   Widget build(BuildContext context) {
+    getLocation();
     return Scaffold(
         key: _scaffoldKey,
         body: ScopedModelDescendant<UserModel>(
@@ -107,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Text("Criar nova conta"),
                     onPressed: (){
                       Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => SignUpScreen())
+                          MaterialPageRoute(builder: (context) => SignUpScreen(_position))
                       );
                     },
                   ),
@@ -115,26 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 4.0,
                     color: Colors.black,
                   ),
-                  RaisedButton(
-                    padding: EdgeInsets.only(left: 4.0, right: 4.0),
-                    child: Container(
-                      padding: EdgeInsets.all(10.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Icon(FontAwesomeIcons.google,
-                            color: Colors.white,),
-                          Text(" Entrar com google",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white),)
-                        ],
-                      ),
-                    ),
-                    color: Colors.black,
-                    onPressed: (){
-                      model.signInWithGoogle();
-                    },
-                  )
+                  CustomGoogleLoginButton(model, _position,_onSuccess, _onFail),
                 ],
               ),
             );
@@ -158,5 +143,10 @@ void _onSuccess(){
         duration: Duration(seconds: 2),
       )
     );
+  }
+
+  void getLocation() async {
+    _position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
   }
 }

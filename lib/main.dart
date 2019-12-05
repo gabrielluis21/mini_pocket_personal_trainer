@@ -5,13 +5,10 @@ import 'package:mini_pocket_personal_trainer/screens/login_screen.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import 'models/user_model.dart';
-import 'package:geolocator/geolocator.dart';
-
 const String appId = "ca-app-pub-8831023011848191~6860707039";
 
 void main() {
   FirebaseAdMob.instance.initialize(appId: appId);
-  GeolocationPermission.locationWhenInUse;
   runApp(MyApp());
 }
 

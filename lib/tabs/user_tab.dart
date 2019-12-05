@@ -5,15 +5,16 @@ import 'package:mini_pocket_personal_trainer/datas/user_exercises_data.dart';
 import 'package:mini_pocket_personal_trainer/models/user_model.dart';
 import 'package:mini_pocket_personal_trainer/screens/todolist_screen.dart';
 import 'package:mini_pocket_personal_trainer/tiles/user_exercise_tile.dart';
-import 'package:scoped_model/scoped_model.dart';
 
 class UserTab extends StatelessWidget {
 
+  final UserModel model;
+
+  UserTab(this.model);
+
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<UserModel>(
-      builder: (context, child, model){
-       return Column(
+    return  Column(
          children: <Widget>[
           Flexible(
             flex: 2,
@@ -36,7 +37,7 @@ class UserTab extends StatelessWidget {
             flex: 5,
             child: FutureBuilder<QuerySnapshot>(
              future: Firestore.instance.collection("users")
-             .document(model.firebaseUser.uid).collection("myExercises").getDocuments(),
+             .document(model.user["uid"]).collection("myExercises").getDocuments(),
               builder: (context, snapshot){
                if(!snapshot.hasData)
                  return Center(child: Text("Sem exercícios para fazer!",
@@ -62,8 +63,6 @@ class UserTab extends StatelessWidget {
              ),
           )
         ],
-       );
-     },
     );
   }
 }

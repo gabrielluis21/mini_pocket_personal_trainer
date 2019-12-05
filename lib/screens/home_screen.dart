@@ -12,6 +12,7 @@ import 'package:mini_pocket_personal_trainer/tabs/gym_tab.dart';
 import 'package:mini_pocket_personal_trainer/tabs/user_tab.dart';
 import 'package:mini_pocket_personal_trainer/widgets/custom_drawer.dart';
 import 'package:firebase_admob/firebase_admob.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 
 const String adUnitId = "ca-app-pub-8831023011848191/8849749584";
@@ -59,43 +60,47 @@ class _HomeScreenState extends State<HomeScreen> {
         controller: _pageController,
         physics: NeverScrollableScrollPhysics(),
         children: <Widget>[
-           Scaffold(
-             appBar: AppBar(
-               title: Text("Pocket Personal Trainer"),
-               centerTitle: true,
-               actions: <Widget>[
-                 IconButton(
-                   icon: Icon(Icons.camera_alt),
-                   onPressed: () async{
-                     File imgFile = await ImagePicker
-                          .pickImage(source: ImageSource.camera);
-                     if(imgFile == null) return;
-                     StorageUploadTask task = FirebaseStorage.instance
-                       .ref().child("photos").child(
-                         UserModel.of(context).firebaseUser.uid +
-                              DateTime.now().millisecondsSinceEpoch.toString())
-                       .putFile(imgFile);
-                     StorageTaskSnapshot snap = await task.onComplete;
-                     String url = await snap.ref.getDownloadURL();
-                     Navigator.push(context,
-                       MaterialPageRoute(
-                           builder: (context) => SharePhotoScreen(url)
-                     )
-                   );
-                  },
-                 )
-               ]
-             ),
-             floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => ToDoListScreen())
-                  );
-                },
-               child: Icon(Icons.fullscreen),
-             ),
-             drawer: CustomDrawer(_pageController),
-             body: UserTab(),
+           ScopedModelDescendant<UserModel>(
+             builder: (context, child, model){
+               return Scaffold(
+                 appBar: AppBar(
+                     title: Text("Pocket Personal Trainer"),
+                     centerTitle: true,
+                     actions: <Widget>[
+                       IconButton(
+                         icon: Icon(Icons.camera_alt),
+                         onPressed: () async{
+                           File imgFile = await ImagePicker
+                               .pickImage(source: ImageSource.camera);
+                           if(imgFile == null) return;
+                           StorageUploadTask task = FirebaseStorage.instance
+                               .ref().child("photos").child(
+                               model.user["uid"] +
+                                   DateTime.now().millisecondsSinceEpoch.toString())
+                               .putFile(imgFile);
+                           StorageTaskSnapshot snap = await task.onComplete;
+                           String url = await snap.ref.getDownloadURL();
+                           Navigator.push(context,
+                               MaterialPageRoute(
+                                   builder: (context) => SharePhotoScreen(url)
+                               )
+                           );
+                         },
+                       )
+                     ]
+                 ),
+                 floatingActionButton: FloatingActionButton(
+                   onPressed: () {
+                     Navigator.of(context).push(
+                         MaterialPageRoute(builder: (context) => ToDoListScreen())
+                     );
+                   },
+                   child: Icon(Icons.zoom_out_map),
+                 ),
+                 drawer: CustomDrawer(_pageController),
+                 body: UserTab(model),
+               );
+             },
            ),
            Scaffold(
              appBar: AppBar(

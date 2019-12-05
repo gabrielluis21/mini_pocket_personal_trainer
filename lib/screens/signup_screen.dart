@@ -1,13 +1,18 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mini_pocket_personal_trainer/models/user_model.dart';
 import 'package:mini_pocket_personal_trainer/screens/home_screen.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class SignUpScreen extends StatefulWidget {
+  final Position location;
+
+  SignUpScreen(this.location);
+
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  _SignUpScreenState createState() => _SignUpScreenState(location);
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
@@ -18,7 +23,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _cityController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwdController = TextEditingController();
+  final Position _location;
   String profilePhoto;
+
+  _SignUpScreenState(this._location);
 
   @override
   Widget build(BuildContext context) {
@@ -30,14 +38,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
       body:ScopedModelDescendant<UserModel>(
         builder: (context, child, model){
-          if(model.isLoggedIn()){
-            _nameController.text = model.user["name"];
-            _addressController.text = model.user["address"];
-            _emailController.text = model.user["email"];
-            _passwdController.text = model.user["email"];
-            profilePhoto = model.user["profilePhoto"];
-          }
-
           if(model.isLoading)
             return Center(child: CircularProgressIndicator(),);
 
@@ -123,6 +123,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   validator: (text){
                     if(text.isEmpty || text.length < 6) return "Senha inválida!";
                   },
+                  obscureText: true,
                 ),
                 SizedBox(height: 16.0,),
                 RaisedButton(
@@ -133,7 +134,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         "address":_addressController.text,
                         "email":_emailController.text,
                         "profilePhoto" : profilePhoto,
-                        "city": _cityController.text
+                        "city": _cityController.text,
+                        "currentLocation": _location
                       };
                         await model.signUp(
                             userData: user,

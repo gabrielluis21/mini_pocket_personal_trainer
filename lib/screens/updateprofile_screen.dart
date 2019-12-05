@@ -16,7 +16,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final _nameController = TextEditingController();
   final _addressController = TextEditingController();
   final _emailController = TextEditingController();
-  final _passwdController = TextEditingController();
   final _cityController = TextEditingController();
   String profilePhoto;
 
@@ -34,7 +33,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
             _nameController.text = model.user["name"];
             _addressController.text = model.user["address"];
             _emailController.text = model.user["email"];
-            _passwdController.text = model.user["email"];
             profilePhoto = model.user["profilePhoto"];
             _cityController.text = model.user["city"];
           }
