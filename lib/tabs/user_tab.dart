@@ -43,6 +43,7 @@ class UserTab extends StatelessWidget {
                  return Center(child: Text("Sem exercícios para fazer!",
                  style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
                  ),);
+
                return GestureDetector(
                  onTap: (){
                    Navigator.of(context).push(

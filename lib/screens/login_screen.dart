@@ -5,7 +5,6 @@ import 'package:mini_pocket_personal_trainer/screens/signup_screen.dart';
 import 'package:mini_pocket_personal_trainer/widgets/custom_google_button.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -17,17 +16,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _senhaController = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  Position _position;
 
   @override
   Widget build(BuildContext context) {
-    getLocation();
     return Scaffold(
         key: _scaffoldKey,
         body: ScopedModelDescendant<UserModel>(
           builder: (context, child, model){
-            if(model.isLoading)
-              return Center(child: CircularProgressIndicator(),);
 
             return Form(
               key: _formKey,
@@ -111,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Text("Criar nova conta"),
                     onPressed: (){
                       Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => SignUpScreen(_position))
+                          MaterialPageRoute(builder: (context) => SignUpScreen())
                       );
                     },
                   ),
@@ -119,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 4.0,
                     color: Colors.black,
                   ),
-                  CustomGoogleLoginButton(model, _position,_onSuccess, _onFail),
+                  CustomGoogleLoginButton(model,_onSuccess, _onFail),
                 ],
               ),
             );
@@ -143,10 +138,5 @@ void _onSuccess(){
         duration: Duration(seconds: 2),
       )
     );
-  }
-
-  void getLocation() async {
-    _position = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
   }
 }

@@ -1,7 +1,9 @@
+import 'dart:async';
 
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mini_pocket_personal_trainer/models/user_model.dart';
@@ -11,9 +13,19 @@ class CustomGoogleLoginButton extends StatelessWidget {
   final UserModel model;
   VoidCallback _onSuccess;
   VoidCallback _onFail;
-  final Position _location;
 
-  CustomGoogleLoginButton(this.model, this._location, this._onSuccess, this._onFail);
+  Future<Position> getLocation() async {
+    Position current = Position();
+    await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high,
+        locationPermissionLevel: GeolocationPermission.locationAlways)
+        .then((position){
+      current = position;
+    });
+    return current;
+  }
+
+  CustomGoogleLoginButton(this.model, this._onSuccess, this._onFail);
 
   @override
   Widget build(BuildContext context) {
@@ -37,24 +49,43 @@ class CustomGoogleLoginButton extends StatelessWidget {
 
     );
   }
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final _autoPassword = "21JEC87221";
+  final GoogleSignIn googleSignIn = GoogleSignIn();
 
   singUpWithGoogle() async {
+
     Map<String, dynamic> userData = Map();
+    Map<String, double> pos = Map();
 
-    GoogleSignInAccount googleAccount = _googleSignIn.currentUser;
-    if(googleAccount == null)
-      googleAccount = await _googleSignIn.signInSilently();
-    if(googleAccount == null)
-      googleAccount = await _googleSignIn.signIn();
+    await getLocation().then((position) {
+      pos["latitude"] = position.latitude;
+      pos["longitude"] = position.longitude;
+    });
 
-    userData["name"] = googleAccount.displayName;
-    userData["email"] = googleAccount.email;
-    userData["profilePhoto"] = googleAccount.photoUrl;
-    userData["currentLocation"] = _location;
+    await Geocoder.local.findAddressesFromCoordinates(
+        Coordinates(pos["latitude"], pos["longitude"])).then((value){
+      userData["address"] = value.first.addressLine;
+    });
 
-    model.signUp(userData: userData, passwd: _autoPassword,onFail: _onFail, onSuccess: _onSuccess);
+
+    final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
+    final GoogleSignInAuthentication googleSignInAuthentication =
+    await googleSignInAccount.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleSignInAuthentication.accessToken,
+      idToken: googleSignInAuthentication.idToken,
+    );
+
+    userData["name"] = googleSignInAccount.displayName;
+    userData["email"] = googleSignInAccount.email;
+    userData["profilePhoto"] = googleSignInAccount.photoUrl;
+    userData["currentPosition"] = pos;
+
+    model.signInWithGoogle(userData: userData, credential: credential,
+         onFail: _onFail, onSuccess: _onSuccess);
   }
 
 }
+
+
+

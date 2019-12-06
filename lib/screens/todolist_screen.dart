@@ -76,7 +76,7 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                                 exercise.doneIn = DateTime.now();
                                 exercise.isDone = c;
                                 ExercisesModel.of(context)
-                                    .alterExercise(exercise);
+                                    .updateExercise(exercise);
                               });
                             }
                         ),

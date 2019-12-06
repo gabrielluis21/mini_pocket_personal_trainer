@@ -11,10 +11,15 @@ class ExercisesModel extends Model{
 
   ExercisesModel(this.user);
 
+  bool isLoading = false;
+
   static ExercisesModel of(BuildContext context) =>
       ScopedModel.of<ExercisesModel>(context);
 
-  void addExerciseItem(UserExercises exercise){
+  void addExerciseItem({@required UserExercises exercise,
+    @required VoidCallback onSuccess, @required VoidCallback onFail}){
+    isLoading = true;
+    notifyListeners();
 
     exercises.add(exercise);
 
@@ -22,6 +27,16 @@ class ExercisesModel extends Model{
         .document(user.firebaseUser.uid).collection("myExercises")
         .add(exercise.toMap()).then((doc){
       exercise.categoryId = doc.documentID;
+
+      onSuccess;
+      isLoading = false;
+      notifyListeners();
+
+    }).catchError((e){
+
+      onFail;
+      isLoading = false;
+      notifyListeners();
     });
 
     notifyListeners();
@@ -60,11 +75,15 @@ class ExercisesModel extends Model{
     notifyListeners();
   }
 
-  void alterExercise(UserExercises exercise){
-    removeExercise(exercise);
+  void updateExercise(UserExercises exercise) async {
+    isLoading = true;
+    notifyListeners();
 
-    addExerciseItem(exercise);
+    await Firestore.instance.collection("users").document(user.firebaseUser.uid)
+        .collection("myExercises").document(exercise.categoryId)
+        .setData(exercise.toMap(), merge: true);
 
+    isLoading = false;
     notifyListeners();
   }
 

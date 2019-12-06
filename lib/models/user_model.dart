@@ -1,12 +1,16 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class UserModel extends Model{
 
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseUser firebaseUser;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
 
   Map<String, dynamic> user = Map();
 
@@ -44,17 +48,16 @@ class UserModel extends Model{
     });
   }
 
-  signUp({@required Map<String, dynamic> userData,
-    @required String passwd, @required VoidCallback onSuccess,
-    @required VoidCallback onFail}) {
+  signInWithGoogle({@required Map<String, dynamic> userData,
+    @required AuthCredential credential,
+    @required VoidCallback onSuccess, @required VoidCallback onFail}) async {
     isLoading = true;
     notifyListeners();
 
-    _auth.createUserWithEmailAndPassword(email: userData["email"],
-        password: passwd).then((authResult) async{
+    _auth.signInWithCredential(credential).then((authResult) async{
       firebaseUser = authResult.user;
       userData["uid"] = firebaseUser.uid;
-      _saveUserData(userData);
+      await _saveUserData(userData);
       onSuccess();
 
       isLoading = false;
@@ -64,7 +67,40 @@ class UserModel extends Model{
       onFail();
       isLoading = false;
       notifyListeners();
-    });
+    });;
+
+
+  }
+
+  void signOutGoogle() async{
+    await googleSignIn.signOut();
+
+    print("User Sign Out");
+  }
+
+  signUp({@required Map<String, dynamic> userData,
+    @required String email, @required String passwd,
+    @required VoidCallback onSuccess, @required VoidCallback onFail}) {
+    isLoading = true;
+    notifyListeners();
+
+
+
+    _auth.createUserWithEmailAndPassword(email: email, password: passwd)
+        .then((authResult) async{
+          firebaseUser = authResult.user;
+          userData["uid"] = firebaseUser.uid;
+          await _saveUserData(userData);
+          onSuccess();
+
+          isLoading = false;
+          notifyListeners();
+
+        }).catchError((e){
+          onFail();
+          isLoading = false;
+          notifyListeners();
+        });
 
   }
 
@@ -110,33 +146,31 @@ class UserModel extends Model{
 
   updateUserData(Map<String, dynamic> userData) async{
     this.user = userData;
-    CollectionReference collection = Firestore.instance.collection("users");
-    await collection.document(firebaseUser.uid).setData(userData, merge: true);
+    await Firestore.instance.collection("users")
+       .document(firebaseUser.uid).setData(userData, merge: true);
   }
 
-  _saveUserData(Map<String, dynamic> userData) async {
+  Future<Null> _saveUserData(Map<String, dynamic> userData) async {
     this.user = userData;
-    Firestore.instance.runTransaction((transaction) async {
-      await transaction.set(Firestore.instance.collection("users").document(firebaseUser.uid), {
-        'profilePhoto': userData["profilePhoto"],
-        'name':  userData["name"],
-        'address':  userData["address"],
-        'email':  userData["email"],
-        'currentLocation':  userData["currentLocation"]
-      });
-    });
+    await Firestore.instance.collection("users")
+        .document(firebaseUser.uid).setData(userData, merge: false);
 
   }
 
    _getCurrentUser() async{
-    if(firebaseUser != null)
+    isLoading = true;
+    notifyListeners();
+
+    if(firebaseUser == null)
       firebaseUser = await _auth.currentUser();
     if(firebaseUser != null){
         await Firestore.instance.collection("users").document(firebaseUser.uid).get().then((user){
-          this.user["uid"] = firebaseUser.uid;
           this.user = user.data;
         });
     }
+
+    isLoading = false;
+    notifyListeners();
   }
 
 }

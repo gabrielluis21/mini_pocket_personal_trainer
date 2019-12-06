@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -7,12 +9,8 @@ import 'package:mini_pocket_personal_trainer/screens/home_screen.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class SignUpScreen extends StatefulWidget {
-  final Position location;
-
-  SignUpScreen(this.location);
-
   @override
-  _SignUpScreenState createState() => _SignUpScreenState(location);
+  _SignUpScreenState createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
@@ -23,10 +21,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _cityController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwdController = TextEditingController();
-  final Position _location;
   String profilePhoto;
 
-  _SignUpScreenState(this._location);
+  Future<Position> getLocation() async {
+    Position current = Position();
+    await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high,
+        locationPermissionLevel: GeolocationPermission.locationAlways)
+        .then((position){
+      current = position;
+    });
+    return current;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,16 +135,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 RaisedButton(
                   onPressed: () async{
                     if(_formKey.currentState.validate()){
+                      Map<String, double> pos = Map();
+                      await getLocation().then((position) {
+                        pos["latitude"] = position.latitude;
+                        pos["longitude"] = position.longitude;
+                      });
                       Map<String, dynamic> user = {
                         "name":_nameController.text,
                         "address":_addressController.text,
                         "email":_emailController.text,
                         "profilePhoto" : profilePhoto,
                         "city": _cityController.text,
-                        "currentLocation": _location
+                        "currentLocation": pos
                       };
                         await model.signUp(
                             userData: user,
+                            email: _emailController.text,
                             passwd: _passwdController.text,
                             onSuccess: _onSuccess,
                             onFail: _onFail);

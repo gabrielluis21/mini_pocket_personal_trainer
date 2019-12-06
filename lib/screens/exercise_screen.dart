@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mini_pocket_personal_trainer/datas/exercise_data.dart';
 import 'package:mini_pocket_personal_trainer/datas/user_exercises_data.dart';
 import 'package:mini_pocket_personal_trainer/models/exercise_model.dart';
+import 'package:mini_pocket_personal_trainer/screens/home_screen.dart';
 import 'package:mini_pocket_personal_trainer/screens/todolist_screen.dart';
 
 import 'photo_screen.dart';
@@ -21,6 +22,7 @@ class ExerciseScreen extends StatefulWidget {
 class _ExerciseScreenState extends State<ExerciseScreen> {
   final ExerciseData _exercise;
   DateTime date;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   _ExerciseScreenState(this._exercise);
 
@@ -33,14 +35,17 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
     final color = Theme.of(context).primaryColor;
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(_exercise.name),
       ),
       body: ListView(
+        padding: EdgeInsets.only(bottom: 65.0),
         children: <Widget>[
           AspectRatio(
-           aspectRatio: 0.8,
+            aspectRatio: 0.8,
             child: Carousel(
+              boxFit: BoxFit.fill,
               images: _exercise.images.map((url){
                return NetworkImage(url);
                }).toList(),
@@ -117,7 +122,6 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
               ),
             ),
             onPressed: (){
-              setState(() {
                 userExercise.categoryExercise = _exercise.category;
                 userExercise.exerciseId = _exercise.id;
                 userExercise.isDone = false;
@@ -125,32 +129,52 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                 userExercise.dateMarked = date;
                 userExercise.exerciseData = _exercise;
 
-                print(userExercise.toMap());
-
-                ExercisesModel.of(context).addExerciseItem(userExercise);
-
-                final snack = SnackBar(
-                      content: Text("Exercício: \"${_exercise.name }\" adicionado!"),
-                      action: SnackBarAction(
-                        onPressed: (){
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => ToDoListScreen()
-                            )
-                          );
-                        },
-                        label: "Visualizar",
-                      ),
-                      duration: Duration(seconds: 2),
-                );
-                Scaffold.of(context).removeCurrentSnackBar();
-                Scaffold.of(context).showSnackBar(snack);
-              });
+                if(date == null){
+                  _scaffoldKey.currentState.showSnackBar(
+                      SnackBar(
+                        content: Text("Erro ao Salvar exercício!"),
+                        duration: Duration(seconds: 3),
+                        backgroundColor: Colors.red,),);
+                }
+                else{
+                  ExercisesModel.of(context).
+                    addExerciseItem(exercise: userExercise,
+                      onSuccess: _onSuccess, onFail: _onFail);
+                }
             },
           ),
         ],
       ),
     );
+  }
+
+  void _onSuccess(){
+    _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text("Exercício: \"${_exercise.name }\" adicionado!"),
+          action: SnackBarAction(
+            onPressed: (){
+              Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (context) => ToDoListScreen()
+                  )
+              );
+            },
+            label: "Visualizar",
+          ),
+          duration: Duration(seconds: 5),
+        ));
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => HomeScreen())
+    );
+  }
+
+  void _onFail(){
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: Text("Erro ao Salvar exercício!"),
+        duration: Duration(seconds: 3),
+        backgroundColor: Colors.red,),);
   }
 }
 
