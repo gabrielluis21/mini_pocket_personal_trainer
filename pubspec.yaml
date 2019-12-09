@@ -1,5 +1,5 @@
 name: mini_pocket_personal_trainer
-description: A new Flutter application.
+description: A app for gym lovers.
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -35,9 +35,11 @@ dependencies:
   carousel_pro: ^1.0.0
   transparent_image: ^1.0.0
   flutter_map: ^0.7.3
-  firebase_admob: ^0.9.0+7
+  firebase_admob: ^0.9.0+9
   geolocator: ^5.1.5
   geocoder: ^0.2.1
+  flutter_facebook_login: ^3.0.0
+  http: ^0.12.0+2
 
 dev_dependencies:
   flutter_test:

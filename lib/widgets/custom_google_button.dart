@@ -11,8 +11,8 @@ import 'package:mini_pocket_personal_trainer/models/user_model.dart';
 class CustomGoogleLoginButton extends StatelessWidget {
 
   final UserModel model;
-  VoidCallback _onSuccess;
-  VoidCallback _onFail;
+  final VoidCallback _onSuccess;
+  final VoidCallback _onFail;
 
   Future<Position> getLocation() async {
     Position current = Position();
@@ -30,11 +30,11 @@ class CustomGoogleLoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
-      padding: EdgeInsets.only(left: 4.0, right: 4.0),
+      padding: EdgeInsets.only(right: 4.0),
       onPressed: singUpWithGoogle,
       color: Colors.red,
       child: Container(
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(5.0),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[

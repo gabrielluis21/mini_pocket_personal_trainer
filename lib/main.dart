@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
               ),
             );
 
-          if( model.firebaseUser.uid != null){
+          if( model.firebaseUser != null){
             return ScopedModel<ExercisesModel>(
               model: ExercisesModel(model),
               child: MaterialApp(

@@ -26,6 +26,30 @@ class UserModel extends Model{
 
   }
 
+  signInWithFaceBook({@required Map<String, dynamic> userData,
+    @required AuthCredential credential,
+    @required onSuccess,  @required onFail}) {
+
+    isLoading = true;
+    notifyListeners();
+
+    _auth.signInWithCredential(credential)
+      .then((authResult) async{
+       firebaseUser = authResult.user;
+       userData["uid"] = firebaseUser.uid;
+       await _saveUserData(userData);
+       onSuccess();
+
+       isLoading = false;
+       notifyListeners();
+
+    }).catchError((e){
+      onFail();
+      isLoading = false;
+      notifyListeners();
+    });
+  }
+
   updateProfile({@required Map<String, dynamic> userData,
     @required VoidCallback onSuccess,
     @required VoidCallback onFail}){
@@ -35,7 +59,7 @@ class UserModel extends Model{
 
     this.updateUserData(userData).then((user){
       this.user = userData;
-      onSuccess;
+      onSuccess();
       isLoading = false;
 
 
@@ -67,7 +91,7 @@ class UserModel extends Model{
       onFail();
       isLoading = false;
       notifyListeners();
-    });;
+    });
 
 
   }
@@ -83,8 +107,6 @@ class UserModel extends Model{
     @required VoidCallback onSuccess, @required VoidCallback onFail}) {
     isLoading = true;
     notifyListeners();
-
-
 
     _auth.createUserWithEmailAndPassword(email: email, password: passwd)
         .then((authResult) async{
@@ -153,7 +175,7 @@ class UserModel extends Model{
   Future<Null> _saveUserData(Map<String, dynamic> userData) async {
     this.user = userData;
     await Firestore.instance.collection("users")
-        .document(firebaseUser.uid).setData(userData, merge: false);
+        .document(firebaseUser.uid).setData(userData);
 
   }
 
@@ -172,5 +194,4 @@ class UserModel extends Model{
     isLoading = false;
     notifyListeners();
   }
-
 }

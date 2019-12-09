@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mini_pocket_personal_trainer/screens/about_screen.dart';
-import 'package:mini_pocket_personal_trainer/screens/signup_screen.dart';
 import 'package:mini_pocket_personal_trainer/screens/support_screen.dart';
 import 'package:mini_pocket_personal_trainer/screens/updateprofile_screen.dart';
 

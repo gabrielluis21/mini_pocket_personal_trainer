@@ -7,7 +7,7 @@ import 'package:latlong/latlong.dart';
 import 'photo_screen.dart';
 
 class GymScreen extends StatefulWidget {
-  GymData academia;
+  final GymData academia;
 
   GymScreen(this.academia);
   @override

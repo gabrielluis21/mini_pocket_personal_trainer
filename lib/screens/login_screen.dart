@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mini_pocket_personal_trainer/models/user_model.dart';
 import 'package:mini_pocket_personal_trainer/screens/home_screen.dart';
 import 'package:mini_pocket_personal_trainer/screens/signup_screen.dart';
+import 'package:mini_pocket_personal_trainer/widgets/custom_facebook_button.dart';
 import 'package:mini_pocket_personal_trainer/widgets/custom_google_button.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter/services.dart';
@@ -114,7 +115,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 4.0,
                     color: Colors.black,
                   ),
-                  CustomGoogleLoginButton(model,_onSuccess, _onFail),
+                  Row(
+                    children: <Widget>[
+                      CustomGoogleLoginButton(model,_onSuccess, _onFail),
+                      CustomFacebookLoginButton(model, _onSuccess, _onFail),
+                    ],),
                 ],
               ),
             );

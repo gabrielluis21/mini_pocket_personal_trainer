@@ -28,13 +28,13 @@ class ExercisesModel extends Model{
         .add(exercise.toMap()).then((doc){
       exercise.categoryId = doc.documentID;
 
-      onSuccess;
+      onSuccess();
       isLoading = false;
       notifyListeners();
 
     }).catchError((e){
 
-      onFail;
+      onFail();
       isLoading = false;
       notifyListeners();
     });

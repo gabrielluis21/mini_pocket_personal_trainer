@@ -29,19 +29,25 @@ class _HomeScreenState extends State<HomeScreen> {
   static final MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
     keywords: <String>['fitness', 'fitness apps', 'fitness equipament', 'gym'],
     contentUrl: 'https://flutter.io',
-    birthday: DateTime.now(),
     childDirected: false,
-    designedForFamilies: false,
-    gender: MobileAdGender.male,
     testDevices: <String>["90AC6E90F00D0E963CDEC31A359461FA"],
   );
 
+  static final InterstitialAd myInterstitial = InterstitialAd(
+    // Replace the testAdUnitId with an ad unit id from the AdMob dash.
+    // https://developers.google.com/admob/android/test-ads
+    // https://developers.google.com/admob/ios/test-ads
+    adUnitId: adUnitId,
+    targetingInfo: targetingInfo,
+  );
   BannerAd myBanner = BannerAd(
     adUnitId: adUnitId,
     size: AdSize.smartBanner,
     targetingInfo: targetingInfo,
     listener: (MobileAdEvent event) {
-      print("BannerAd event is $event");
+      myInterstitial
+        ..load()
+        ..show();
     },
   );
 
