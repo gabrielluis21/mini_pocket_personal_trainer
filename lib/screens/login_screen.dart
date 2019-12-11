@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_pocket_personal_trainer/models/user_model.dart';
 import 'package:mini_pocket_personal_trainer/screens/home_screen.dart';
@@ -28,24 +29,30 @@ class _LoginScreenState extends State<LoginScreen> {
             return Form(
               key: _formKey,
               child: ListView(
-                padding: EdgeInsets.all(10.0),
+                padding: EdgeInsets.all(3.0),
                 children: <Widget>[
                   Align(
                     alignment: Alignment.topCenter,
                     child: Image.asset(
                       "images/logo.png",
-                      height: 150.0,
+                      height: 200.0,
                       width: 300.0,
                     ),
                   ),
                   Text("Pocket Personal Trainer",
                     style: TextStyle(fontSize: 32.0,
                         fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic),
+                        fontStyle: FontStyle.italic,
+                        decoration: TextDecoration.underline),
                   ),
-                  SizedBox(height: 5.0,),
+                  SizedBox(height: 25.0,),
                   TextFormField(
-                    decoration: InputDecoration(labelText: "E-mail"),
+                    decoration: InputDecoration(labelText: "E-mail",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(7.0)),
+                            gapPadding: 5.0
+                        )
+                    ),
                     keyboardType: TextInputType.emailAddress,
                     controller: _emailController,
                     validator: (text){
@@ -53,9 +60,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         return "E-mail invalido!";
                     },
                   ),
-                  SizedBox(height: 5.0,),
+                  SizedBox(height: 10.0,),
                   TextFormField(
-                    decoration: InputDecoration(labelText: "Senha"),
+                    decoration: InputDecoration(labelText: "Senha",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(7.0)),
+                      gapPadding: 5.0
+                      )
+                    ),
                     obscureText: true,
                     controller: _senhaController,
                     validator: (text){
@@ -67,7 +79,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   Align(
                       alignment: Alignment.centerRight,
                       child: FlatButton(
-                          child: Text("Esqueci minha senha"),
+                          child: Text("Esqueci minha senha",
+                          style: TextStyle(fontSize: 18.0),),
                           onPressed: (){
                             if(_emailController.text.isEmpty)
                               _scaffoldKey.currentState.showSnackBar(
@@ -86,25 +99,33 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                       )
                   ),
-                  SizedBox(height: 10.0,),
-                  RaisedButton(
-                    child: Text("Entrar",
-                      style: TextStyle(fontSize: 20.0,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    textColor: Colors.white,
-                    onPressed: () {
-                      if(_formKey.currentState.validate()){
-                          model.login(email: _emailController.text,
-                            passwd: _senhaController.text, onFail: _onFail,
-                            onSuccess: _onSuccess);
-                      }
-                    },
-                    color: Theme.of(context).primaryColor,
+                  Container(
+                    height: 45.0,
+                    padding: EdgeInsets.all(5.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(),
+                      borderRadius: BorderRadius.all(Radius.circular(7.0)),
+                      color:  Theme.of(context).primaryColor,
                   ),
-                  SizedBox(height: 5.0,),
+                    child: FlatButton(
+                      child: Text("Entrar",
+                        style: TextStyle(fontSize: 20.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      textColor: Colors.white,
+                      onPressed: () {
+                        if(_formKey.currentState.validate()){
+                          model.logIn(email: _emailController.text,
+                              passwd: _senhaController.text, onFail: _onFail,
+                              onSuccess: _onSuccess);
+                        }
+                      },
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
                   FlatButton(
-                    child: Text("Criar nova conta"),
+                    child: Text("Criar nova conta",
+                        style: TextStyle(fontSize: 18.0)),
                     onPressed: (){
                       Navigator.of(context).push(
                           MaterialPageRoute(builder: (context) => SignUpScreen())
@@ -115,9 +136,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 4.0,
                     color: Colors.black,
                   ),
+                  SizedBox(height: 10.0,),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       CustomGoogleLoginButton(model,_onSuccess, _onFail),
+                      Divider(height: 4.0,),
                       CustomFacebookLoginButton(model, _onSuccess, _onFail),
                     ],),
                 ],

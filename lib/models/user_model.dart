@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -11,6 +12,7 @@ class UserModel extends Model{
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseUser firebaseUser;
   final GoogleSignIn googleSignIn = GoogleSignIn();
+  final FacebookLogin facebookLogin = FacebookLogin();
 
   Map<String, dynamic> user = Map();
 
@@ -28,8 +30,7 @@ class UserModel extends Model{
 
   signInWithFaceBook({@required Map<String, dynamic> userData,
     @required AuthCredential credential,
-    @required onSuccess,  @required onFail}) {
-
+    @required VoidCallback onSuccess,  @required VoidCallback onFail}) async {
     isLoading = true;
     notifyListeners();
 
@@ -52,21 +53,19 @@ class UserModel extends Model{
 
   updateProfile({@required Map<String, dynamic> userData,
     @required VoidCallback onSuccess,
-    @required VoidCallback onFail}){
+    @required VoidCallback onFail}) async {
     isLoading = true;
-
     notifyListeners();
 
-    this.updateUserData(userData).then((user){
+    this._updateUserData(userData).then((user){
       this.user = userData;
       onSuccess();
+
       isLoading = false;
-
-
-
       notifyListeners();
     }).catchError((e){
       onFail();
+
       isLoading = false;
       notifyListeners();
     });
@@ -96,10 +95,26 @@ class UserModel extends Model{
 
   }
 
-  void signOutGoogle() async{
-    await googleSignIn.signOut();
+  _signOutFacebook() async{
+    await facebookLogin.logOut();
+    _auth.signOut();
+  }
 
-    print("User Sign Out");
+  _signOutGoogle() async{
+    await googleSignIn.signOut();
+    _auth.signOut();
+  }
+
+  userSignOut(){
+    switch(firebaseUser.providerId){
+      case 'facebook.com': _signOutFacebook();
+        break;
+      case 'google.com': _signOutGoogle();
+        break;
+      default: _logOut();
+        break;
+    }
+
   }
 
   signUp({@required Map<String, dynamic> userData,
@@ -126,7 +141,7 @@ class UserModel extends Model{
 
   }
 
-  login({@required String email, @required String passwd,
+  logIn({@required String email, @required String passwd,
     @required VoidCallback onSuccess, @required VoidCallback onFail}) async{
 
     isLoading = true;
@@ -149,7 +164,7 @@ class UserModel extends Model{
     });
   }
 
-  logOut() async{
+  _logOut() async{
     await _auth.signOut();
 
     user = Map();
@@ -166,7 +181,7 @@ class UserModel extends Model{
     _auth.sendPasswordResetEmail(email: email);
   }
 
-  updateUserData(Map<String, dynamic> userData) async{
+  _updateUserData(Map<String, dynamic> userData) async{
     this.user = userData;
     await Firestore.instance.collection("users")
        .document(firebaseUser.uid).setData(userData, merge: true);
@@ -176,6 +191,8 @@ class UserModel extends Model{
     this.user = userData;
     await Firestore.instance.collection("users")
         .document(firebaseUser.uid).setData(userData);
+    await Firestore.instance.collection("users").document(firebaseUser.uid)
+    .collection("myExercises");
 
   }
 

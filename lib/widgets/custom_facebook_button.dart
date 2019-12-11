@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,8 +17,6 @@ class CustomFacebookLoginButton extends StatelessWidget {
   final VoidCallback _onSuccess;
   final VoidCallback _onFail;
 
-  CustomFacebookLoginButton(this.model, this._onSuccess, this._onFail);
-
   Future<Position> getLocation() async {
     Position current = Position();
     await Geolocator()
@@ -29,22 +28,29 @@ class CustomFacebookLoginButton extends StatelessWidget {
     return current;
   }
 
+  CustomFacebookLoginButton(this.model, this._onSuccess, this._onFail);
+
   @override
   Widget build(BuildContext context) {
-    return RaisedButton(
-      padding: EdgeInsets.only(right: 4.0),
-      onPressed: signInWithFacebookLogin,
-      color: Colors.indigoAccent,
-      child: Container(
+    return Container(
+      height: 50.0,
+      decoration: BoxDecoration(
+        border: Border.all(),
+        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+        color: Colors.indigoAccent,
+      ),
+      child: FlatButton(
         padding: EdgeInsets.all(5.0),
+        onPressed: signInWithFacebookLogin,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
           Icon(FontAwesomeIcons.facebook,
             color: Colors.white,),
-          Text(" Entrar com Facebook",
+          Text("Entrar com Facebook",
           textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.white),)
+          style: TextStyle(color: Colors.white, fontSize: 16.0),)
         ],),
       ),
     );
@@ -64,46 +70,28 @@ class CustomFacebookLoginButton extends StatelessWidget {
       user["address"] = value.first.addressLine;
     });
 
-    final FacebookLoginResult result = await _handleFBSignIn();
+    FacebookLogin facebookLogin = FacebookLogin();
+    FacebookLoginResult facebookLoginResult =
+      await facebookLogin.logIn(['email', 'public_profile' , 'user_hometown']);
+
+    AuthCredential facebookAuthCred = FacebookAuthProvider
+             .getCredential(accessToken: facebookLoginResult.accessToken.token);
 
     var graphResponse = await http.get(
      'https://graph.facebook.com/v2.12/me?fields=name,'+
-         'email,picture.height(200),hometown&access_token=${result.accessToken.token}');
+         'email,picture.height(200),hometown&access_token='+
+             '${facebookLoginResult.accessToken.token}');
 
     final profile = json.decode(graphResponse.body);
 
     user["name"] = profile["name"];
     user["email"] = profile["email"];
     user["profilePhoto"] = profile["picture"]["data"]["url"];
-    user["city"] = profile["hometown"];
+    user["city"] = profile["hometown"]["name"];
     user["currentLocation"] = pos;
-
-
-    final facebookAuthCred = FacebookAuthProvider
-        .getCredential(accessToken: result.accessToken.token);
 
     model.signInWithFaceBook(userData: user, credential: facebookAuthCred,
         onSuccess: _onSuccess, onFail: _onFail);
   }
-
-  Future<FacebookLoginResult> _handleFBSignIn() async {
-    FacebookLogin facebookLogin = FacebookLogin();
-    FacebookLoginResult facebookLoginResult =
-    await facebookLogin.logIn(['email', 'public_profile' , 'user_hometown']);
-
-    switch (facebookLoginResult.status) {
-      case FacebookLoginStatus.cancelledByUser:
-        print("Cancelled");
-        break;
-      case FacebookLoginStatus.error:
-        print("error");
-        break;
-      case FacebookLoginStatus.loggedIn:
-        print("Logged In");
-        break;
-    }
-    return facebookLoginResult;
-  }
-
 
 }

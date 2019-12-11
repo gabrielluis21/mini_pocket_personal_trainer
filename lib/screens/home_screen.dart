@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mini_pocket_personal_trainer/models/user_model.dart';
 import 'package:mini_pocket_personal_trainer/screens/sharephoto_screen.dart';
@@ -32,23 +34,10 @@ class _HomeScreenState extends State<HomeScreen> {
     childDirected: false,
     testDevices: <String>["90AC6E90F00D0E963CDEC31A359461FA"],
   );
-
-  static final InterstitialAd myInterstitial = InterstitialAd(
-    // Replace the testAdUnitId with an ad unit id from the AdMob dash.
-    // https://developers.google.com/admob/android/test-ads
-    // https://developers.google.com/admob/ios/test-ads
-    adUnitId: adUnitId,
-    targetingInfo: targetingInfo,
-  );
   BannerAd myBanner = BannerAd(
     adUnitId: adUnitId,
     size: AdSize.smartBanner,
     targetingInfo: targetingInfo,
-    listener: (MobileAdEvent event) {
-      myInterstitial
-        ..load()
-        ..show();
-    },
   );
 
   @override
@@ -60,54 +49,54 @@ class _HomeScreenState extends State<HomeScreen> {
         // Banner Position
         anchorType: AnchorType.bottom,
       );
+
     return Padding(
       padding: new EdgeInsets.only(bottom: 50.0),
       child: PageView(
         controller: _pageController,
         physics: NeverScrollableScrollPhysics(),
         children: <Widget>[
-           ScopedModelDescendant<UserModel>(
-             builder: (context, child, model){
-               return Scaffold(
-                 appBar: AppBar(
-                     title: Text("Pocket Personal Trainer"),
-                     centerTitle: true,
-                     actions: <Widget>[
-                       IconButton(
-                         icon: Icon(Icons.camera_alt),
-                         onPressed: () async{
-                           File imgFile = await ImagePicker
-                               .pickImage(source: ImageSource.camera);
-                           if(imgFile == null) return;
-                           StorageUploadTask task = FirebaseStorage.instance
-                               .ref().child("photos").child(
-                               model.user["uid"] +
-                                   DateTime.now().millisecondsSinceEpoch.toString())
-                               .putFile(imgFile);
-                           StorageTaskSnapshot snap = await task.onComplete;
-                           String url = await snap.ref.getDownloadURL();
-                           Navigator.push(context,
-                               MaterialPageRoute(
-                                   builder: (context) => SharePhotoScreen(url)
-                               )
-                           );
-                         },
-                       )
-                     ]
-                 ),
-                 floatingActionButton: FloatingActionButton(
-                   onPressed: () {
-                     Navigator.of(context).push(
-                         MaterialPageRoute(builder: (context) => ToDoListScreen())
-                     );
-                   },
-                   child: Icon(Icons.zoom_out_map),
-                 ),
-                 drawer: CustomDrawer(_pageController),
-                 body: UserTab(model),
-               );
-             },
-           ),
+         ScopedModelDescendant<UserModel>(
+          builder: (context, child, model){
+           return Scaffold(
+             appBar: AppBar(
+               title: Text("Pocket Personal Trainer",
+               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),),
+               centerTitle: true,
+               actions: <Widget>[
+               IconButton(icon: Icon(FontAwesomeIcons.camera, size: 30.0,),
+                 onPressed: () async{
+                  File imgFile = await ImagePicker.pickImage(source: ImageSource.camera);
+                  if(imgFile == null) return;
+                  StorageUploadTask task = FirebaseStorage.instance
+                   .ref().child("photos").child(model.user["uid"] +
+                       DateTime.now().millisecondsSinceEpoch.toString())
+                   .putFile(imgFile);
+                  StorageTaskSnapshot snap = await task.onComplete;
+                  String url = await snap.ref.getDownloadURL();
+                  Navigator.push(context,
+                   MaterialPageRoute(
+                       builder: (context) => SharePhotoScreen(url)
+                    )
+                   );
+                  },
+                )
+              ]
+             ),
+             floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                 MaterialPageRoute(builder: (context) => ToDoListScreen())
+                );
+               },
+              child: Icon(Icons.zoom_out_map),
+             ),
+             drawerDragStartBehavior: DragStartBehavior.start,
+             drawer: CustomDrawer(_pageController),
+             body: UserTab(model),
+            );
+           },
+         ),
            Scaffold(
              appBar: AppBar(
                 title: Text("Exercicios"),

@@ -29,18 +29,24 @@ class CustomGoogleLoginButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RaisedButton(
-      padding: EdgeInsets.only(right: 4.0),
-      onPressed: singUpWithGoogle,
-      color: Colors.red,
-      child: Container(
+    return Container(
+      height: 50.0,
+      padding: EdgeInsets.only(right: 5.0),
+      decoration: BoxDecoration(
+        border: Border.all(),
+        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+        color:  Colors.red,
+      ),
+      child: FlatButton(
         padding: EdgeInsets.all(5.0),
+        onPressed: singUpWithGoogle,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Icon(FontAwesomeIcons.google,
               color: Colors.white,),
-            Text(" Entrar com google",
+            Text("Entrar com Google",
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.white),)
           ],
