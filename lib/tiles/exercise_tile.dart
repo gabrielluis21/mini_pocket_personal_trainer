@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:mini_pocket_personal_trainer/datas/exercise_data.dart';
 import 'package:mini_pocket_personal_trainer/screens/exercise_screen.dart';
@@ -15,11 +14,15 @@ class ExerciseTile extends StatelessWidget {
         child: Row(
           children: <Widget>[
             Flexible(
-             flex: 1,
-             child: Image.network(
-               exerciseData.images[0],
-               fit: BoxFit.cover, height: 150.0,),
-           ),
+              flex: 1,
+              child: exerciseData.images.isNotEmpty
+                  ? Image.network(
+                      exerciseData.images.first,
+                      fit: BoxFit.cover,
+                      height: 150.0,
+                    )
+                  : Image.asset("images/empty.png"),
+            ),
             Flexible(
               flex: 1,
               child: Container(
@@ -27,7 +30,8 @@ class ExerciseTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text( exerciseData.name,
+                    Text(
+                      exerciseData.name,
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                   ],
@@ -37,10 +41,9 @@ class ExerciseTile extends StatelessWidget {
           ],
         ),
       ),
-      onTap: (){
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => ExerciseScreen(exerciseData))
-          );
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => ExerciseScreen(exerciseData)));
       },
     );
   }

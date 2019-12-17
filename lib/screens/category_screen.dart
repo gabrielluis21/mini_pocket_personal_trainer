@@ -1,43 +1,46 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_pocket_personal_trainer/datas/exercise_data.dart';
 import 'package:mini_pocket_personal_trainer/tiles/exercise_tile.dart';
 
 class CategoryScreen extends StatelessWidget {
+  final DocumentSnapshot _doc;
 
-  final DocumentSnapshot _snapshot;
-
-  CategoryScreen(this._snapshot);
+  CategoryScreen(this._doc);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_snapshot.data["title"]),
-        centerTitle: true,
-      ),
-      body: FutureBuilder(
-        future: Firestore.instance.collection("exercises")
-            .document(_snapshot.documentID).collection("item").getDocuments(),
-        builder: (context, snapshot){
-          if(!snapshot.hasData)
-            return Center(child: CircularProgressIndicator(),);
-          else{
+        appBar: AppBar(
+          title: Text(_doc.data["title"]),
+          centerTitle: true,
+        ),
+        body: FutureBuilder<QuerySnapshot>(
+          future: Firestore.instance
+              .collection("exercicios")
+              .document(_doc.documentID)
+              .collection("itens")
+              .getDocuments(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData)
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+
+            print(snapshot.data.documents.length);
             return ListView.builder(
                 padding: EdgeInsets.all(4.0),
                 itemCount: snapshot.data.documents.length,
-                itemBuilder: (context, index){
-                  ExerciseData exercise = ExerciseData.fromDocument(snapshot.data.documents[index]);
-                  exercise.category = _snapshot.documentID;
-
+                itemBuilder: (context, index) {
+                  ExerciseData exercise;
+                  exercise =
+                      ExerciseData.fromDocument(snapshot.data.documents[index]);
+                  exercise.category = _doc.data["title"];
+                  print(exercise.toResumeMap());
                   return ExerciseTile(exercise);
-                }
-            );
-          }
-
-        },
-      )
-    );
+                });
+          },
+        ));
   }
 }
-

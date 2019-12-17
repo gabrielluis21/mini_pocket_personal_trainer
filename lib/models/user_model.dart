@@ -191,8 +191,6 @@ class UserModel extends Model{
     this.user = userData;
     await Firestore.instance.collection("users")
         .document(firebaseUser.uid).setData(userData);
-    await Firestore.instance.collection("users").document(firebaseUser.uid)
-    .collection("myExercises");
 
   }
 

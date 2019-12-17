@@ -6,65 +6,67 @@ import 'package:mini_pocket_personal_trainer/screens/login_screen.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import 'models/user_model.dart';
+
 const String appId = "ca-app-pub-8831023011848191~6860707039";
 
-void main() {
-  FirebaseAdMob.instance.initialize(appId: appId);
+void main() async {
   runApp(MyApp());
+  await FirebaseAdMob.instance.initialize(appId: appId);
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     return ScopedModel<UserModel>(
-      model: UserModel(),
-      child: ScopedModelDescendant<UserModel>(
-        builder: (context, child, model){
-          if(model.isLoading )
-            return MaterialApp(
-              title: 'Pocket Personal Trainer',
-              theme: ThemeData(
-                primarySwatch: Colors.blue,
-                primaryColor: Color.fromARGB(255, 90, 90, 253),
-            ),
-              debugShowCheckedModeBanner: false,
-              home: Container(color: Colors.white,
-                child: Center(
-                  child: CircularProgressIndicator(backgroundColor: Colors.blue,),
+        model: UserModel(),
+        child: ScopedModelDescendant<UserModel>(
+          builder: (context, child, model) {
+            if (model.isLoading)
+              return MaterialApp(
+                title: 'Pocket Personal Trainer',
+                theme: ThemeData(
+                  primarySwatch: Colors.blue,
+                  primaryColor: Color.fromARGB(255, 90, 90, 253),
                 ),
-              ),
-            );
+                debugShowCheckedModeBanner: false,
+                home: Container(
+                  color: Colors.white,
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.blue,
+                    ),
+                  ),
+                ),
+              );
 
-          if( model.firebaseUser != null){
+            if (model.firebaseUser != null) {
+              return ScopedModel<ExercisesModel>(
+                model: ExercisesModel(model),
+                child: MaterialApp(
+                  title: 'Pocket Personal Trainer',
+                  theme: ThemeData(
+                    primarySwatch: Colors.blue,
+                    primaryColor: Color.fromARGB(255, 90, 90, 253),
+                  ),
+                  debugShowCheckedModeBanner: false,
+                  home: HomeScreen(),
+                ),
+              );
+            }
+
             return ScopedModel<ExercisesModel>(
               model: ExercisesModel(model),
               child: MaterialApp(
                 title: 'Pocket Personal Trainer',
                 theme: ThemeData(
-                 primarySwatch: Colors.blue,
-                 primaryColor: Color.fromARGB(255, 90, 90, 253),
+                  primarySwatch: Colors.blue,
+                  primaryColor: Color.fromARGB(255, 90, 90, 253),
                 ),
                 debugShowCheckedModeBanner: false,
-                home: HomeScreen(),
+                home: LoginScreen(),
               ),
             );
-          }
-
-          return ScopedModel<ExercisesModel>(
-            model: ExercisesModel(model),
-            child: MaterialApp(
-              title: 'Pocket Personal Trainer',
-              theme: ThemeData(
-                primarySwatch: Colors.blue,
-                primaryColor: Color.fromARGB(255, 90, 90, 253),
-              ),
-              debugShowCheckedModeBanner: false,
-              home: LoginScreen(),
-            ),
-          );
-        },
-      )
-    );
+          },
+        ));
   }
 }
