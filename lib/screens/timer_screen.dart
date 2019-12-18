@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mini_pocket_personal_trainer/datas/user_exercises_data.dart';
 import 'package:mini_pocket_personal_trainer/models/exercise_model.dart';
-import 'package:mini_pocket_personal_trainer/widgets/custom_timer_painter.dart';
+import 'package:mini_pocket_personal_trainer/painter/custom_timer_painter.dart';
 
 class TimerScreen extends StatefulWidget {
   final UserExercises exercise;
@@ -86,8 +86,8 @@ class _TimerScreenState extends State<TimerScreen>
                                         Text(
                                           exercise.exerciseData.name,
                                           style: TextStyle(
-                                              fontSize: 20.0,
-                                              color: Colors.white),
+                                              fontSize: 25.0,
+                                              color: Colors.amber),
                                         ),
                                         Text(
                                           timerString,

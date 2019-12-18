@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mini_pocket_personal_trainer/datas/user_exercises_data.dart';
 import 'package:mini_pocket_personal_trainer/models/exercise_model.dart';
 import 'package:mini_pocket_personal_trainer/models/user_model.dart';
+import 'package:mini_pocket_personal_trainer/screens/counter_screen.dart';
 import 'package:mini_pocket_personal_trainer/screens/exercise_screen.dart';
 import 'package:mini_pocket_personal_trainer/screens/timer_screen.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -184,15 +186,15 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  Icon(Icons.timer),
-                                  Text("Contador"),
+                                  Icon(MdiIcons.plusMinusBox),
+                                  Text("Steps"),
                                 ],
                               ),
                             ),
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) =>
-                                      ExerciseScreen(exercise.exerciseData)));
+                                      CounterScreen(exercise)));
                             }),
                       ],
                     ),
