@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:audioplayers/audio_cache.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_pocket_personal_trainer/datas/user_exercises_data.dart';
 import 'package:mini_pocket_personal_trainer/models/exercise_model.dart';
@@ -20,6 +24,8 @@ class _TimerScreenState extends State<TimerScreen>
 
   AnimationController controller;
 
+  final player = AudioCache();
+
   String get timerString {
     Duration duration = controller.duration * controller.value;
     return '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
@@ -32,6 +38,17 @@ class _TimerScreenState extends State<TimerScreen>
       vsync: this,
       duration: Duration(minutes: exercise.quantity),
     );
+  }
+
+  Future<Null> stopAudio() async {
+    AudioPlayer audio = AudioPlayer();
+    int result = await audio.stop();
+    if (result == 1) {
+      exercise.isDone = true;
+      ExercisesModel.of(context).updateExercise(exercise);
+      Navigator.of(context).pop();
+    }
+    return null;
   }
 
   @override
@@ -87,7 +104,7 @@ class _TimerScreenState extends State<TimerScreen>
                                           exercise.exerciseData.name,
                                           style: TextStyle(
                                               fontSize: 25.0,
-                                              color: Colors.amber),
+                                              color: Colors.amber[900]),
                                         ),
                                         Text(
                                           timerString,
@@ -117,10 +134,13 @@ class _TimerScreenState extends State<TimerScreen>
                                                   ? 1.0
                                                   : controller.value)
                                           .whenComplete(() {
-                                        exercise.isDone = true;
-                                        ExercisesModel.of(context)
-                                            .updateExercise(exercise);
-                                        Navigator.of(context).pop();
+                                        player
+                                            .play('alarm.mp3',
+                                                mode: PlayerMode.LOW_LATENCY,
+                                                stayAwake: false,
+                                                isNotification: true)
+                                            .timeout(Duration(microseconds: 5),
+                                                onTimeout: stopAudio);
                                       });
                                     }
                                   },

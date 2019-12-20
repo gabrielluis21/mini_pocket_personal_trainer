@@ -18,14 +18,16 @@ class ToDoListScreen extends StatefulWidget {
 }
 
 class _ToDoListScreenState extends State<ToDoListScreen> {
+  static List _toDoList;
+
   Future<Null> _refresh(List toDoList) async {
     await Future.delayed(Duration(seconds: 1));
 
     setState(() {
       toDoList.sort((a, b) {
-        if (a["ok"] && !b["ok"])
+        if (a["isDone"] == true && b["isDone"] == false)
           return 1;
-        else if (!a["ok"] && b["ok"])
+        else if (a["isDone"] == false && b["isDone"] == true)
           return -1;
         else
           return 0;
@@ -40,6 +42,14 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
         appBar: AppBar(
           title: Text("Meus Exercícios"),
           centerTitle: true,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.refresh),
+              onPressed: () async {
+                await _refresh(_toDoList);
+              },
+            ),
+          ],
         ),
         body: ScopedModelDescendant<UserModel>(
           builder: (context, child, model) {
@@ -52,10 +62,10 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                 builder: (context, snapshot) {
                   if (!snapshot.hasData)
                     return Center(child: CircularProgressIndicator());
-
+                  _toDoList = snapshot.data.documents;
                   return RefreshIndicator(
                     onRefresh: () async {
-                      await _refresh(snapshot.data.documents);
+                      await _refresh(_toDoList);
                     },
                     child: ListView.builder(
                       padding: EdgeInsets.all(4.0),
