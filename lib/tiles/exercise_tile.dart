@@ -21,7 +21,7 @@ class ExerciseTile extends StatelessWidget {
                       fit: BoxFit.cover,
                       height: 150.0,
                     )
-                  : Image.asset("images/empty.png"),
+                  : Image.asset("assets/images/empty.png"),
             ),
             Flexible(
               flex: 1,

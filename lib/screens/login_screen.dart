@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mini_pocket_personal_trainer/models/user_model.dart';
 import 'package:mini_pocket_personal_trainer/screens/home_screen.dart';
 import 'package:mini_pocket_personal_trainer/screens/signup_screen.dart';
 import 'package:mini_pocket_personal_trainer/widgets/custom_facebook_button.dart';
 import 'package:mini_pocket_personal_trainer/widgets/custom_google_button.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:flutter/services.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -34,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Align(
                     alignment: Alignment.topCenter,
                     child: Image.asset(
-                      "images/logo.png",
+                      "assets/images/logo.png",
                       height: 200.0,
                       width: 300.0,
                     ),

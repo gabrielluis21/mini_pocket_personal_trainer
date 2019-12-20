@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         IconButton(
                           icon: Icon(
                             FontAwesomeIcons.camera,
-                            size: 30.0,
+                            size: 25.0,
                           ),
                           onPressed: () async {
                             File imgFile = await ImagePicker.pickImage(
