@@ -26,9 +26,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Future<Position> getLocation() async {
     Position current = Position();
     await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high,
-        locationPermissionLevel: GeolocationPermission.locationAlways)
-        .then((position){
+        .getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high,
+            locationPermissionLevel: GeolocationPermission.locationAlways)
+        .then((position) {
       current = position;
     });
     return current;
@@ -42,10 +43,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         title: Text("Cadastrar"),
         centerTitle: true,
       ),
-      body:ScopedModelDescendant<UserModel>(
-        builder: (context, child, model){
-          if(model.isLoading)
-            return Center(child: CircularProgressIndicator(),);
+      body: ScopedModelDescendant<UserModel>(
+        builder: (context, child, model) {
+          if (model.isLoading)
+            return Center(
+              child: CircularProgressIndicator(),
+            );
 
           return Form(
             key: _formKey,
@@ -59,105 +62,112 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
-                        image: profilePhoto != null ?
-                          Image.network(profilePhoto) :
-                          AssetImage("images/person.png")),),),
-                  onTap: (){
-                    ImagePicker.pickImage(source: ImageSource.camera).then((file) async{
-                      if(file == null) return;
-                      StorageUploadTask task = FirebaseStorage.instance.ref()
-                          .child("photos").child("profilePhotos")
+                          image: profilePhoto != null
+                              ? Image.network(profilePhoto)
+                              : AssetImage("images/person.png")),
+                    ),
+                  ),
+                  onTap: () {
+                    ImagePicker.pickImage(source: ImageSource.camera)
+                        .then((file) async {
+                      if (file == null) return;
+                      StorageUploadTask task = FirebaseStorage.instance
+                          .ref()
+                          .child("photos")
+                          .child("profilePhotos")
                           .child(model.firebaseUser.uid +
-                          DateTime.now().millisecondsSinceEpoch.toString())
+                              DateTime.now().millisecondsSinceEpoch.toString())
                           .putFile(file);
                       StorageTaskSnapshot snap = await task.onComplete;
-                      setState(() async{
+                      setState(() async {
                         profilePhoto = await snap.ref.getDownloadURL();
                       });
                     });
-                  },),
+                  },
+                ),
                 TextFormField(
                   controller: _nameController,
-                  decoration: InputDecoration(
-                      labelText: "Nome completo"
-                  ),
-                  validator: (text){
-                    if(text.isEmpty)
-                      return "Insira o seu endereço";
+                  decoration: InputDecoration(labelText: "Nome completo"),
+                  validator: (text) {
+                    if (text.isEmpty) return "Insira o seu endereço";
                   },
                 ),
-                SizedBox(height: 16.0,),
+                SizedBox(
+                  height: 16.0,
+                ),
                 TextFormField(
                   controller: _addressController,
-                  decoration: InputDecoration(
-                      labelText: "Endereço"
-                  ),
-                  validator: (text){
-                    if(text.isEmpty)
-                      return "Insira o seu endereço";
+                  decoration: InputDecoration(labelText: "Endereço"),
+                  validator: (text) {
+                    if (text.isEmpty) return "Insira o seu endereço";
                   },
                 ),
-                SizedBox(height: 16.0,),
+                SizedBox(
+                  height: 16.0,
+                ),
                 TextFormField(
                   controller: _cityController,
-                  decoration: InputDecoration(
-                      labelText: "Cidade"
-                  ),
-                  validator: (text){
-                    if(text.isEmpty)
-                      return "Insira a sua cidade";
+                  decoration: InputDecoration(labelText: "Cidade"),
+                  validator: (text) {
+                    if (text.isEmpty) return "Insira a sua cidade";
                   },
                 ),
-                SizedBox(height: 16.0,),
+                SizedBox(
+                  height: 16.0,
+                ),
                 TextFormField(
                   controller: _emailController,
-                  decoration: InputDecoration(
-                      labelText: "Email"
-                  ),
+                  decoration: InputDecoration(labelText: "Email"),
                   keyboardType: TextInputType.emailAddress,
-                  validator: (text){
-                    if(text.isEmpty || !text.contains("@"))
+                  validator: (text) {
+                    if (text.isEmpty || !text.contains("@"))
                       return "E-mail inválido";
                   },
                 ),
-                SizedBox(height: 16.0,),
+                SizedBox(
+                  height: 16.0,
+                ),
                 TextFormField(
                   controller: _passwdController,
-                  decoration: InputDecoration(
-                      labelText: "Senha"
-                  ),
-                  validator: (text){
-                    if(text.isEmpty || text.length < 6) return "Senha inválida!";
+                  decoration: InputDecoration(labelText: "Senha"),
+                  validator: (text) {
+                    if (text.isEmpty || text.length < 6)
+                      return "Senha inválida!";
                   },
                   obscureText: true,
                 ),
-                SizedBox(height: 16.0,),
+                SizedBox(
+                  height: 16.0,
+                ),
                 RaisedButton(
-                  onPressed: () async{
-                    if(_formKey.currentState.validate()){
+                  onPressed: () async {
+                    if (_formKey.currentState.validate()) {
                       Map<String, double> pos = Map();
                       await getLocation().then((position) {
                         pos["latitude"] = position.latitude;
                         pos["longitude"] = position.longitude;
                       });
                       Map<String, dynamic> user = {
-                        "name":_nameController.text,
-                        "address":_addressController.text,
-                        "email":_emailController.text,
-                        "profilePhoto" : profilePhoto,
+                        "name": _nameController.text,
+                        "address": _addressController.text,
+                        "email": _emailController.text,
+                        "profilePhoto": profilePhoto,
                         "city": _cityController.text,
-                        "currentLocation": pos
+                        "currentLocation": pos,
+                        "physicalRatings": 0
                       };
-                        await model.signUp(
-                            userData: user,
-                            email: _emailController.text,
-                            passwd: _passwdController.text,
-                            onSuccess: _onSuccess,
-                            onFail: _onFail);
+                      await model.signUp(
+                          userData: user,
+                          email: _emailController.text,
+                          passwd: _passwdController.text,
+                          onSuccess: _onSuccess,
+                          onFail: _onFail);
                     }
                   },
-                  child: Text("Criar Conta",
-                    textAlign: TextAlign.center,),
+                  child: Text(
+                    "Criar Conta",
+                    textAlign: TextAlign.center,
+                  ),
                   color: Theme.of(context).primaryColor,
                 ),
               ],
@@ -169,23 +179,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _onSuccess() {
-    _scaffoldKey.currentState.showSnackBar(
-        SnackBar(content: Text("Usuário criado com sucesso!"),
-          backgroundColor: Theme.of(context).primaryColor,
-          duration: Duration(seconds: 2),)
-    );
-    Future.delayed(Duration(seconds: 2)).then((_){
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text("Usuário criado com sucesso!"),
+      backgroundColor: Theme.of(context).primaryColor,
+      duration: Duration(seconds: 2),
+    ));
+    Future.delayed(Duration(seconds: 2)).then((_) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => HomeScreen())
-      );
+          MaterialPageRoute(builder: (context) => HomeScreen()));
     });
   }
 
-  void _onFail(){
-    _scaffoldKey.currentState.showSnackBar(
-        SnackBar(content: Text("Falha ao criar usuário!"),
-          backgroundColor: Colors.redAccent,
-          duration: Duration(seconds: 3),)
-    );
+  void _onFail() {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text("Falha ao criar usuário!"),
+      backgroundColor: Colors.redAccent,
+      duration: Duration(seconds: 3),
+    ));
   }
 }

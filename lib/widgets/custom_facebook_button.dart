@@ -8,9 +8,8 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:mini_pocket_personal_trainer/models/user_model.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:mini_pocket_personal_trainer/models/user_model.dart';
 
 class CustomFacebookLoginButton extends StatelessWidget {
   final UserModel model;
@@ -20,9 +19,10 @@ class CustomFacebookLoginButton extends StatelessWidget {
   Future<Position> getLocation() async {
     Position current = Position();
     await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high,
-        locationPermissionLevel: GeolocationPermission.locationAlways)
-        .then((position){
+        .getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high,
+            locationPermissionLevel: GeolocationPermission.locationAlways)
+        .then((position) {
       current = position;
     });
     return current;
@@ -46,17 +46,22 @@ class CustomFacebookLoginButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-          Icon(FontAwesomeIcons.facebook,
-            color: Colors.white,),
-          Text("Entrar com Facebook",
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.white, fontSize: 16.0),)
-        ],),
+            Icon(
+              FontAwesomeIcons.facebook,
+              color: Colors.white,
+            ),
+            Text(
+              "Entrar com Facebook",
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white, fontSize: 16.0),
+            )
+          ],
+        ),
       ),
     );
   }
 
-  signInWithFacebookLogin() async{
+  signInWithFacebookLogin() async {
     Map<String, dynamic> user = Map();
     Map<String, double> pos = Map();
 
@@ -65,22 +70,24 @@ class CustomFacebookLoginButton extends StatelessWidget {
       pos["longitude"] = position.longitude;
     });
 
-    await Geocoder.local.findAddressesFromCoordinates(
-        Coordinates(pos["latitude"], pos["longitude"])).then((value){
+    await Geocoder.local
+        .findAddressesFromCoordinates(
+            Coordinates(pos["latitude"], pos["longitude"]))
+        .then((value) {
       user["address"] = value.first.addressLine;
     });
 
     FacebookLogin facebookLogin = FacebookLogin();
     FacebookLoginResult facebookLoginResult =
-      await facebookLogin.logIn(['email', 'public_profile' , 'user_hometown']);
+        await facebookLogin.logIn(['email', 'public_profile', 'user_hometown']);
 
-    AuthCredential facebookAuthCred = FacebookAuthProvider
-             .getCredential(accessToken: facebookLoginResult.accessToken.token);
+    AuthCredential facebookAuthCred = FacebookAuthProvider.getCredential(
+        accessToken: facebookLoginResult.accessToken.token);
 
     var graphResponse = await http.get(
-     'https://graph.facebook.com/v2.12/me?fields=name,'+
-         'email,picture.height(200),hometown&access_token='+
-             '${facebookLoginResult.accessToken.token}');
+        'https://graph.facebook.com/v2.12/me?fields=name,' +
+            'email,picture.height(200),hometown&access_token=' +
+            '${facebookLoginResult.accessToken.token}');
 
     final profile = json.decode(graphResponse.body);
 
@@ -88,10 +95,13 @@ class CustomFacebookLoginButton extends StatelessWidget {
     user["email"] = profile["email"];
     user["profilePhoto"] = profile["picture"]["data"]["url"];
     user["city"] = profile["hometown"]["name"];
+    user["physicalRatings"] = 0;
     user["currentLocation"] = pos;
 
-    model.signInWithFaceBook(userData: user, credential: facebookAuthCred,
-        onSuccess: _onSuccess, onFail: _onFail);
+    model.signInWithFaceBook(
+        userData: user,
+        credential: facebookAuthCred,
+        onSuccess: _onSuccess,
+        onFail: _onFail);
   }
-
 }

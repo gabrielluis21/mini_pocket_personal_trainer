@@ -9,7 +9,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mini_pocket_personal_trainer/models/user_model.dart';
 
 class CustomGoogleLoginButton extends StatelessWidget {
-
   final UserModel model;
   final VoidCallback _onSuccess;
   final VoidCallback _onFail;
@@ -17,9 +16,10 @@ class CustomGoogleLoginButton extends StatelessWidget {
   Future<Position> getLocation() async {
     Position current = Position();
     await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high,
-        locationPermissionLevel: GeolocationPermission.locationAlways)
-        .then((position){
+        .getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high,
+            locationPermissionLevel: GeolocationPermission.locationAlways)
+        .then((position) {
       current = position;
     });
     return current;
@@ -35,7 +35,7 @@ class CustomGoogleLoginButton extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(),
         borderRadius: BorderRadius.all(Radius.circular(5.0)),
-        color:  Colors.red,
+        color: Colors.red,
       ),
       child: FlatButton(
         padding: EdgeInsets.all(5.0),
@@ -44,21 +44,24 @@ class CustomGoogleLoginButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Icon(FontAwesomeIcons.google,
-              color: Colors.white,),
-            Text("Entrar com Google",
+            Icon(
+              FontAwesomeIcons.google,
+              color: Colors.white,
+            ),
+            Text(
+              "Entrar com Google",
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white),)
+              style: TextStyle(color: Colors.white),
+            )
           ],
         ),
       ),
-
     );
   }
+
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
   singUpWithGoogle() async {
-
     Map<String, dynamic> userData = Map();
     Map<String, double> pos = Map();
 
@@ -67,15 +70,16 @@ class CustomGoogleLoginButton extends StatelessWidget {
       pos["longitude"] = position.longitude;
     });
 
-    await Geocoder.local.findAddressesFromCoordinates(
-        Coordinates(pos["latitude"], pos["longitude"])).then((value){
+    await Geocoder.local
+        .findAddressesFromCoordinates(
+            Coordinates(pos["latitude"], pos["longitude"]))
+        .then((value) {
       userData["address"] = value.first.addressLine;
     });
 
-
     final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication =
-    await googleSignInAccount.authentication;
+        await googleSignInAccount.authentication;
 
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleSignInAuthentication.accessToken,
@@ -86,12 +90,12 @@ class CustomGoogleLoginButton extends StatelessWidget {
     userData["email"] = googleSignInAccount.email;
     userData["profilePhoto"] = googleSignInAccount.photoUrl;
     userData["currentPosition"] = pos;
+    userData["physicalRatings"] = 0;
 
-    model.signInWithGoogle(userData: userData, credential: credential,
-         onFail: _onFail, onSuccess: _onSuccess);
+    model.signInWithGoogle(
+        userData: userData,
+        credential: credential,
+        onFail: _onFail,
+        onSuccess: _onSuccess);
   }
-
 }
-
-
-
