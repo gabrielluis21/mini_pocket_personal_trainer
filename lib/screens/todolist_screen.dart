@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -61,7 +62,16 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                     .getDocuments(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData)
-                    return Center(child: CircularProgressIndicator());
+                    return Center(
+                      child: Container(
+                        width: 100,
+                        height: 100,
+                        child: FlareActor(
+                          'assets/animations/WeightSpin.flr',
+                          animation: 'Spin',
+                        ),
+                      ),
+                    );
                   _toDoList = snapshot.data.documents;
                   return RefreshIndicator(
                     onRefresh: () async {

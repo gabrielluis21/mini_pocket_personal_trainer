@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_pocket_personal_trainer/datas/exercise_data.dart';
@@ -25,7 +26,14 @@ class CategoryScreen extends StatelessWidget {
           builder: (context, snapshot) {
             if (!snapshot.hasData)
               return Center(
-                child: CircularProgressIndicator(),
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  child: FlareActor(
+                    'assets/animations/WeightSpin.flr',
+                    animation: 'Spin',
+                  ),
+                ),
               );
 
             print(snapshot.data.documents.length);

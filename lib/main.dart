@@ -1,4 +1,5 @@
 import 'package:firebase_admob/firebase_admob.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_pocket_personal_trainer/models/exercise_model.dart';
 import 'package:mini_pocket_personal_trainer/screens/home_screen.dart';
@@ -32,8 +33,13 @@ class MyApp extends StatelessWidget {
                 home: Container(
                   color: Colors.white,
                   child: Center(
-                    child: CircularProgressIndicator(
-                      backgroundColor: Colors.blue,
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      child: FlareActor(
+                        'assets/animations/WeightSpin.flr',
+                        animation: 'Spin',
+                      ),
                     ),
                   ),
                 ),
