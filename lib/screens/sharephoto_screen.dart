@@ -1,9 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 
 class SharePhotoScreen extends StatelessWidget {
-
-  final String imageUrl;
+  final File imageUrl;
 
   SharePhotoScreen(this.imageUrl);
 
@@ -16,16 +17,14 @@ class SharePhotoScreen extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.share),
-            onPressed: (){
-              Share.share(imageUrl);
+            onPressed: () {
+              Share.share(imageUrl.path);
             },
           ),
         ],
       ),
       backgroundColor: Colors.black,
-      body: Center(
-          child: Image.network(imageUrl)
-      ),
+      body: Center(child: Image.file(imageUrl)),
     );
   }
 }

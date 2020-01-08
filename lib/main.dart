@@ -1,6 +1,7 @@
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mini_pocket_personal_trainer/models/exercise_model.dart';
 import 'package:mini_pocket_personal_trainer/screens/home_screen.dart';
 import 'package:mini_pocket_personal_trainer/screens/login_screen.dart';
@@ -18,6 +19,9 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
     return ScopedModel<UserModel>(
         model: UserModel(),
         child: ScopedModelDescendant<UserModel>(

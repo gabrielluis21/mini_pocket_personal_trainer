@@ -27,10 +27,10 @@ dependencies:
   share: ^0.6.3+5
   cloud_firestore: ^0.13.0+1
   scoped_model: ^1.0.1
-  firebase_auth: ^0.15.2
-  google_sign_in: ^4.1.0
+  firebase_auth: ^0.15.3
+  google_sign_in: ^4.1.1
   material_design_icons_flutter: ^3.4.4795
-  firebase_storage: ^3.1.0
+  firebase_storage: ^3.1.1
   image_picker: ^0.6.2+3
   carousel_pro: ^1.0.0
   transparent_image: ^1.0.0
@@ -39,7 +39,7 @@ dependencies:
   geolocator: ^5.1.5
   geocoder: ^0.2.1
   flutter_facebook_login: ^3.0.0
-  http: ^0.12.0+2
+  http: ^0.12.0+4
   audioplayers: ^0.13.5
   qr_flutter: ^3.1.0
   flare_flutter: ^1.8.3

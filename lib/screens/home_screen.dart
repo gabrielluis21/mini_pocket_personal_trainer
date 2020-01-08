@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:firebase_admob/firebase_admob.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mini_pocket_personal_trainer/models/user_model.dart';
@@ -40,6 +40,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Theme.of(context).primaryColor,
+        statusBarIconBrightness: Brightness.light));
+
     myBanner
       // typically this happens well before the ad is shown
       ..load()
@@ -74,21 +78,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             File imgFile = await ImagePicker.pickImage(
                                 source: ImageSource.camera);
                             if (imgFile == null) return;
-                            StorageUploadTask task = FirebaseStorage.instance
-                                .ref()
-                                .child("photos")
-                                .child(model.user["uid"] +
-                                    DateTime.now()
-                                        .millisecondsSinceEpoch
-                                        .toString())
-                                .putFile(imgFile);
-                            StorageTaskSnapshot snap = await task.onComplete;
-                            String url = await snap.ref.getDownloadURL();
+
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        SharePhotoScreen(url)));
+                                        SharePhotoScreen(imgFile)));
                           },
                         )
                       ]),

@@ -21,11 +21,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Colors.white,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: Colors.white,
+        systemNavigationBarIconBrightness: Brightness.dark));
+
     return Scaffold(
         key: _scaffoldKey,
         body: ScopedModelDescendant<UserModel>(
-          builder: (context, child, model){
-
+          builder: (context, child, model) {
             return Form(
               key: _formKey,
               child: ListView(
@@ -39,84 +44,97 @@ class _LoginScreenState extends State<LoginScreen> {
                       width: 300.0,
                     ),
                   ),
-                  Text("Pocket Personal Trainer",
-                    style: TextStyle(fontSize: 32.0,
+                  Text(
+                    "Pocket Personal Trainer",
+                    style: TextStyle(
+                        fontSize: 32.0,
                         fontWeight: FontWeight.bold,
                         fontStyle: FontStyle.italic,
                         decoration: TextDecoration.underline),
                   ),
-                  SizedBox(height: 25.0,),
+                  SizedBox(
+                    height: 25.0,
+                  ),
                   TextFormField(
-                    decoration: InputDecoration(labelText: "E-mail",
+                    decoration: InputDecoration(
+                        icon: Icon(Icons.person),
+                        labelText: "E-mail",
                         border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(7.0)),
-                            gapPadding: 5.0
-                        )
-                    ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(7.0)),
+                            gapPadding: 5.0)),
                     keyboardType: TextInputType.emailAddress,
                     controller: _emailController,
-                    validator: (text){
-                      if(text.isEmpty || !text.contains("@"))
+                    validator: (text) {
+                      if (text.isEmpty || !text.contains("@"))
                         return "E-mail invalido!";
                     },
                   ),
-                  SizedBox(height: 10.0,),
+                  SizedBox(
+                    height: 10.0,
+                  ),
                   TextFormField(
-                    decoration: InputDecoration(labelText: "Senha",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(7.0)),
-                      gapPadding: 5.0
-                      )
-                    ),
+                    decoration: InputDecoration(
+                        icon: Icon(Icons.lock),
+                        labelText: "Senha",
+                        border: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(7.0)),
+                            gapPadding: 5.0)),
                     obscureText: true,
                     controller: _senhaController,
-                    validator: (text){
-                      if(text.isEmpty || text.length < 6)
+                    validator: (text) {
+                      if (text.isEmpty || text.length < 6)
                         return "Senha invalida!";
                     },
                   ),
-                  SizedBox(height: 10.0,),
+                  SizedBox(
+                    height: 10.0,
+                  ),
                   Align(
                       alignment: Alignment.centerRight,
                       child: FlatButton(
-                          child: Text("Esqueci minha senha",
-                          style: TextStyle(fontSize: 18.0),),
-                          onPressed: (){
-                            if(_emailController.text.isEmpty)
-                              _scaffoldKey.currentState.showSnackBar(
-                                  SnackBar(content: Text("Insira o seu e-mail para recuperação!"),
-                                      backgroundColor: Colors.redAccent,
-                                      duration: Duration(seconds: 3))
-                              );
-                            else{
-                              _scaffoldKey.currentState.showSnackBar(
-                                  SnackBar(content: Text("Confira seu email!"),
-                                      backgroundColor: Theme.of(context).primaryColor,
-                                      duration: Duration(seconds: 3))
-                              );
+                          child: Text(
+                            "Esqueci minha senha",
+                            style: TextStyle(fontSize: 18.0),
+                          ),
+                          onPressed: () {
+                            if (_emailController.text.isEmpty)
+                              _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                  content: Text(
+                                      "Insira o seu e-mail para recuperação!"),
+                                  backgroundColor: Colors.redAccent,
+                                  duration: Duration(seconds: 3)));
+                            else {
+                              _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                  content: Text("Confira seu email!"),
+                                  backgroundColor:
+                                      Theme.of(context).primaryColor,
+                                  duration: Duration(seconds: 3)));
                               model.recoverPassword(_emailController.text);
                             }
-                          }
-                      )
-                  ),
+                          })),
                   Container(
                     height: 45.0,
                     padding: EdgeInsets.all(5.0),
                     decoration: BoxDecoration(
                       border: Border.all(),
                       borderRadius: BorderRadius.all(Radius.circular(7.0)),
-                      color:  Theme.of(context).primaryColor,
-                  ),
+                      color: Theme.of(context).primaryColor,
+                    ),
                     child: FlatButton(
-                      child: Text("Entrar",
-                        style: TextStyle(fontSize: 20.0,
-                            fontWeight: FontWeight.bold),
+                      child: Text(
+                        "Entrar",
+                        style: TextStyle(
+                            fontSize: 20.0, fontWeight: FontWeight.bold),
                       ),
                       textColor: Colors.white,
                       onPressed: () {
-                        if(_formKey.currentState.validate()){
-                          model.logIn(email: _emailController.text,
-                              passwd: _senhaController.text, onFail: _onFail,
+                        if (_formKey.currentState.validate()) {
+                          model.logIn(
+                              email: _emailController.text,
+                              passwd: _senhaController.text,
+                              onFail: _onFail,
                               onSuccess: _onSuccess);
                         }
                       },
@@ -126,46 +144,45 @@ class _LoginScreenState extends State<LoginScreen> {
                   FlatButton(
                     child: Text("Criar nova conta",
                         style: TextStyle(fontSize: 18.0)),
-                    onPressed: (){
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => SignUpScreen())
-                      );
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => SignUpScreen()));
                     },
                   ),
                   Divider(
                     height: 4.0,
                     color: Colors.black,
                   ),
-                  SizedBox(height: 10.0,),
+                  SizedBox(
+                    height: 10.0,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      CustomGoogleLoginButton(model,_onSuccess, _onFail),
-                      Divider(height: 4.0,),
+                      CustomGoogleLoginButton(model, _onSuccess, _onFail),
+                      Divider(
+                        height: 4.0,
+                      ),
                       CustomFacebookLoginButton(model, _onSuccess, _onFail),
-                    ],),
+                    ],
+                  ),
                 ],
               ),
             );
           },
-        )
-    );
-  }
-void _onSuccess(){
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => HomeScreen()
-      )
-    );
+        ));
   }
 
-  void _onFail(){
-    _scaffoldKey.currentState.showSnackBar(
-      SnackBar(
-        content: Text("Falha ao realizar login"),
-        backgroundColor: Colors.redAccent,
-        duration: Duration(seconds: 2),
-      )
-    );
+  void _onSuccess() {
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
+  }
+
+  void _onFail() {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text("Falha ao realizar login"),
+      backgroundColor: Colors.redAccent,
+      duration: Duration(seconds: 2),
+    ));
   }
 }
