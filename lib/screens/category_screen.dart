@@ -12,43 +12,45 @@ class CategoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(_doc.data["title"]),
-          centerTitle: true,
-        ),
-        body: FutureBuilder<QuerySnapshot>(
-          future: Firestore.instance
-              .collection("exercicios")
-              .document(_doc.documentID)
-              .collection("itens")
-              .getDocuments(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData)
-              return Center(
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  child: FlareActor(
-                    'assets/animations/WeightSpin.flr',
-                    animation: 'Spin',
+    return Padding(
+      padding: EdgeInsets.only(bottom: 50),
+      child: Scaffold(
+          appBar: AppBar(
+            title: Text(_doc.data["title"]),
+            centerTitle: true,
+          ),
+          body: FutureBuilder<QuerySnapshot>(
+            future: Firestore.instance
+                .collection("exercicios")
+                .document(_doc.documentID)
+                .collection("itens")
+                .getDocuments(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData)
+                return Center(
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    child: FlareActor(
+                      'assets/animations/WeightSpin.flr',
+                      animation: 'Spin',
+                    ),
                   ),
-                ),
-              );
+                );
 
-            print(snapshot.data.documents.length);
-            return ListView.builder(
-                padding: EdgeInsets.all(4.0),
-                itemCount: snapshot.data.documents.length,
-                itemBuilder: (context, index) {
-                  ExerciseData exercise;
-                  exercise =
-                      ExerciseData.fromDocument(snapshot.data.documents[index]);
-                  exercise.category = _doc.data["title"];
-                  print(exercise.toResumeMap());
-                  return ExerciseTile(exercise);
-                });
-          },
-        ));
+              print(snapshot.data.documents.length);
+              return ListView.builder(
+                  padding: EdgeInsets.all(4.0),
+                  itemCount: snapshot.data.documents.length,
+                  itemBuilder: (context, index) {
+                    ExerciseData exercise;
+                    exercise = ExerciseData.fromDocument(
+                        snapshot.data.documents[index]);
+                    exercise.category = _doc.data["title"];
+                    return ExerciseTile(exercise);
+                  });
+            },
+          )),
+    );
   }
 }

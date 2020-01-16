@@ -19,7 +19,7 @@ class ExerciseTile extends StatelessWidget {
                   ? Image.network(
                       exerciseData.images.first,
                       fit: BoxFit.cover,
-                      height: 150.0,
+                      height: 100.0,
                     )
                   : Image.asset("assets/images/empty.png"),
             ),
