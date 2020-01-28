@@ -35,7 +35,7 @@ packages:
       name: audioplayers
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.13.5"
+    version: "0.13.7"
   boolean_selector:
     dependency: transitive
     description:
@@ -44,12 +44,12 @@ packages:
     source: hosted
     version: "1.0.5"
   cached_network_image:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: cached_network_image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0-rc.1"
+    version: "2.0.0"
   carousel_pro:
     dependency: "direct main"
     description:
@@ -112,7 +112,7 @@ packages:
       name: firebase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "7.1.0"
+    version: "7.2.0"
   firebase_admob:
     dependency: "direct main"
     description:
@@ -126,28 +126,28 @@ packages:
       name: firebase_auth
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.15.3"
+    version: "0.15.3+1"
   firebase_auth_platform_interface:
     dependency: transitive
     description:
       name: firebase_auth_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.2"
+    version: "1.1.5"
   firebase_auth_web:
     dependency: transitive
     description:
       name: firebase_auth_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.1+1"
+    version: "0.1.1+4"
   firebase_core:
     dependency: transitive
     description:
       name: firebase_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.3+1"
+    version: "0.4.3+2"
   firebase_core_platform_interface:
     dependency: transitive
     description:
@@ -161,7 +161,14 @@ packages:
       name: firebase_core_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.1+1"
+    version: "0.1.1+2"
+  firebase_messaging:
+    dependency: "direct main"
+    description:
+      name: firebase_messaging
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.0.9"
   firebase_storage:
     dependency: "direct main"
     description:
@@ -175,7 +182,7 @@ packages:
       name: flare_dart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.2"
+    version: "2.3.3"
   flare_flutter:
     dependency: "direct main"
     description:
@@ -215,7 +222,14 @@ packages:
       name: flutter_map
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.8.0"
+    version: "0.8.2"
+  flutter_plugin_android_lifecycle:
+    dependency: transitive
+    description:
+      name: flutter_plugin_android_lifecycle
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -246,14 +260,14 @@ packages:
       name: geolocator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.1.5"
+    version: "5.2.0"
   google_api_availability:
     dependency: transitive
     description:
       name: google_api_availability
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   google_sign_in:
     dependency: "direct main"
     description:
@@ -274,7 +288,7 @@ packages:
       name: google_sign_in_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.8.2+1"
+    version: "0.8.3"
   http:
     dependency: "direct main"
     description:
@@ -302,14 +316,14 @@ packages:
       name: image_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.2+3"
+    version: "0.6.3+1"
   intl:
     dependency: transitive
     description:
       name: intl
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.16.0"
+    version: "0.16.1"
   js:
     dependency: transitive
     description:
@@ -330,14 +344,14 @@ packages:
       name: location_permissions
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.3"
+    version: "2.0.4+1"
   logging:
     dependency: transitive
     description:
       name: logging
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.11.3+2"
+    version: "0.11.4"
   masked_text:
     dependency: "direct main"
     description:
@@ -421,7 +435,7 @@ packages:
       name: qr_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.0"
+    version: "3.2.0"
   quiver:
     dependency: transitive
     description:
@@ -554,5 +568,5 @@ packages:
     source: hosted
     version: "3.5.0"
 sdks:
-  dart: ">=2.6.0 <3.0.0"
+  dart: ">=2.7.0-dev <3.0.0"
   flutter: ">=1.12.13+hotfix.4 <2.0.0"

@@ -65,7 +65,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:21.3.0'
     implementation 'com.facebook.android:facebook-login:[5,6)'
     implementation 'com.google.firebase:firebase-storage:19.1.0'
-
 }
 
 apply plugin: 'com.google.gms.google-services'

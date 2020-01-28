@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:masked_text/masked_text.dart';
@@ -46,14 +48,21 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
           title: Text(_exercise.name),
         ),
         body: ListView(
-          padding: EdgeInsets.only(bottom: 65.0),
+          padding: EdgeInsets.only(right: 10, left: 10),
           children: <Widget>[
             AspectRatio(
               aspectRatio: 0.8,
               child: Carousel(
                 boxFit: BoxFit.fill,
                 images: _exercise.images.map((url) {
-                  return NetworkImage(url);
+                  return CachedNetworkImage(
+                    imageUrl: url,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => FlareActor(
+                      'assets/animations/WeightSpin.flr',
+                      animation: 'Spin',
+                    ),
+                  );
                 }).toList(),
                 dotSize: 4.0,
                 dotSpacing: 15.0,
@@ -89,20 +98,34 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
             SizedBox(
               height: 10.0,
             ),
-            Row(
+            Wrap(
+              crossAxisAlignment: WrapCrossAlignment.start,
+              alignment: WrapAlignment.start,
+              direction: Axis.horizontal,
               children: <Widget>[
-                MaskedTextField(
-                  keyboardType: TextInputType.number,
-                  mask: '##/##/####',
-                  maskedTextFieldController: dateTextController,
-                  inputDecoration: InputDecoration(
-                      hintText:
-                          "Digite o dia para fazer o exercício ou toque no botão ao lado",
-                      labelText: 'Data para fazer o exercício'),
+                Flexible(
+                  flex: 1,
+                  fit: FlexFit.tight,
+                  child: Container(
+                    width: 280,
+                    child: MaskedTextField(
+                      keyboardType: TextInputType.number,
+                      mask: 'xx/xx/xxxx',
+                      maxLength: 10,
+                      maskedTextFieldController: dateTextController,
+                      inputDecoration: InputDecoration(
+                          hintText:
+                              'Toque no botão ao lado para escolher o dia',
+                          labelText: 'Data para fazer o exercício'),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
                 ),
                 IconButton(
                   icon: Icon(MdiIcons.calendar),
-                  iconSize: 18,
+                  iconSize: 30,
                   onPressed: () async {
                     date = await showDatePicker(
                         context: context,
@@ -110,6 +133,8 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                         firstDate: DateTime.parse("2000-01-01 00:00:00.00000"),
                         lastDate: DateTime(
                             DateTime.now().year, DateTime.december, 31));
+                    dateTextController.text =
+                        '${date.day}/${date.month}/${date.year}';
                   },
                 ),
               ],
@@ -146,10 +171,17 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                 userExercise.exerciseId = _exercise.id;
                 userExercise.isDone = false;
                 userExercise.quantity = int.parse(quant.text);
-                userExercise.dateMarked = date;
-                userExercise.exerciseData = _exercise;
 
                 if (date == null) {
+                  final stringToDate = dateTextController.text.split('/');
+                  userExercise.dateMarked = DateTime.parse(
+                      '${stringToDate[2]}-${stringToDate[1]}-${stringToDate[0]} 00:00:00.00000');
+                } else {
+                  userExercise.dateMarked = date;
+                }
+                userExercise.exerciseData = _exercise;
+
+                if (userExercise.dateMarked == null || quant.text.isEmpty) {
                   _scaffoldKey.currentState.showSnackBar(
                     SnackBar(
                       content: Text("Erro ao Salvar exercício!"),

@@ -39,6 +39,12 @@ class _HomeScreenState extends State<HomeScreen> {
   );
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: Theme.of(context).primaryColor,
@@ -52,15 +58,15 @@ class _HomeScreenState extends State<HomeScreen> {
         anchorType: AnchorType.bottom,
       );
 
-    return Padding(
-      padding: new EdgeInsets.only(bottom: 50.0),
-      child: PageView(
-          controller: _pageController,
-          physics: NeverScrollableScrollPhysics(),
-          children: <Widget>[
-            ScopedModelDescendant<UserModel>(
-              builder: (context, child, model) {
-                return Scaffold(
+    return ScopedModelDescendant<UserModel>(
+      builder: (context, child, model) {
+        return Padding(
+          padding: new EdgeInsets.only(bottom: 50.0),
+          child: PageView(
+              controller: _pageController,
+              physics: NeverScrollableScrollPhysics(),
+              children: <Widget>[
+                Scaffold(
                   appBar: AppBar(
                       title: Text(
                         "Pocket Personal Trainer",
@@ -97,33 +103,33 @@ class _HomeScreenState extends State<HomeScreen> {
                   drawerDragStartBehavior: DragStartBehavior.start,
                   drawer: CustomDrawer(_pageController),
                   body: UserTab(model),
-                );
-              },
-            ),
-            Scaffold(
-              appBar: AppBar(
-                title: Text("Exercicios"),
-                centerTitle: true,
-              ),
-              drawer: CustomDrawer(_pageController),
-              body: CategoryTab(),
-            ),
-            Scaffold(
-                appBar: AppBar(
-                  title: Text("Academias parceiras"),
-                  centerTitle: true,
                 ),
-                drawer: CustomDrawer(_pageController),
-                body: GymTab()),
-            Scaffold(
-              appBar: AppBar(
-                title: Text("Configurações"),
-                centerTitle: true,
-              ),
-              drawer: CustomDrawer(_pageController),
-              body: SettingsScreen(),
-            ),
-          ]),
+                Scaffold(
+                  appBar: AppBar(
+                    title: Text("Exercicios"),
+                    centerTitle: true,
+                  ),
+                  drawer: CustomDrawer(_pageController),
+                  body: CategoryTab(),
+                ),
+                Scaffold(
+                    appBar: AppBar(
+                      title: Text("Academias parceiras"),
+                      centerTitle: true,
+                    ),
+                    drawer: CustomDrawer(_pageController),
+                    body: GymTab()),
+                Scaffold(
+                  appBar: AppBar(
+                    title: Text("Configurações"),
+                    centerTitle: true,
+                  ),
+                  drawer: CustomDrawer(_pageController),
+                  body: SettingsScreen(model),
+                ),
+              ]),
+        );
+      },
     );
   }
 }

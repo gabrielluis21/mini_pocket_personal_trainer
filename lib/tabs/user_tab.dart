@@ -28,7 +28,7 @@ class UserTab extends StatelessWidget {
                 child: CircleAvatar(
                   maxRadius: 65.0,
                   backgroundImage: model.user["profilePhoto"] != null
-                      ? NetworkImage(model.user["profilePhoto"])
+                      ? NetworkImage(model.firebaseUser.photoUrl)
                       : AssetImage("assets/images/person.png"),
                 ),
               ),

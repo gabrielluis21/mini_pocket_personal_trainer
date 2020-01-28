@@ -44,6 +44,8 @@ dependencies:
   qr_flutter: ^3.1.0
   flare_flutter: ^1.8.3
   masked_text: ^0.0.6
+  firebase_messaging: ^6.0.9
+  cached_network_image: ^2.0.0
 
 
 dev_dependencies:

@@ -20,6 +20,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final _addressController = TextEditingController();
   final _emailController = TextEditingController();
   final _cityController = TextEditingController();
+  final _passwdController = TextEditingController();
   String profilePhoto;
 
   @override
@@ -128,23 +129,16 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   SizedBox(
                     height: 8.0,
                   ),
-                  FlatButton(
-                      child: Text("Atualizar minha senha"),
-                      onPressed: () {
-                        if (_emailController.text.isEmpty)
-                          _scaffoldKey.currentState.showSnackBar(SnackBar(
-                              content:
-                                  Text("Insira o seu e-mail para recuperação!"),
-                              backgroundColor: Colors.redAccent,
-                              duration: Duration(seconds: 3)));
-                        else {
-                          _scaffoldKey.currentState.showSnackBar(SnackBar(
-                              content: Text("Confira seu email!"),
-                              backgroundColor: Theme.of(context).primaryColor,
-                              duration: Duration(seconds: 3)));
-                          model.recoverPassword(_emailController.text);
-                        }
-                      }),
+                  TextFormField(
+                    keyboardType: TextInputType.text,
+                    obscureText: true,
+                    controller: _passwdController,
+                    maxLength: 8,
+                    validator: (text) {
+                      if (text.isEmpty || text.length < 6)
+                        return "Senha inválida, a senha tem que ter entre 6 a 8 caracteres";
+                    },
+                  ),
                   SizedBox(
                     height: 5.0,
                   ),
@@ -167,6 +161,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                           };
                           await model.updateProfile(
                               userData: user,
+                              password: _passwdController.text,
                               onSuccess: _onSuccess,
                               onFail: _onFail);
                         }
