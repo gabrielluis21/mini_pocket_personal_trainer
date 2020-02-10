@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
@@ -38,7 +40,14 @@ class _GymScreenState extends State<GymScreen> {
                 aspectRatio: 0.8,
                 child: Carousel(
                   images: academia.images.map((url) {
-                    return NetworkImage(url);
+                    return CachedNetworkImage(
+                      imageUrl: url,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => FlareActor(
+                        'assets/animations/WeightSpin.flr',
+                        animation: 'Spin',
+                      ),
+                    );
                   }).toList(),
                   dotSize: 4.0,
                   dotSpacing: 15.0,
@@ -70,7 +79,9 @@ class _GymScreenState extends State<GymScreen> {
               ),
             ),
             Text(
-              academia.phone,
+              academia.phone.length == 1
+                  ? '${academia.phone.first}'
+                  : academia.phone.map((phone) => '$phone'),
               style: TextStyle(
                 fontSize: 16.0,
               ),

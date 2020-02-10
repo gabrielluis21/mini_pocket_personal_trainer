@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
     keywords: <String>['fitness', 'fitness apps', 'fitness equipament', 'gym'],
     contentUrl: 'https://flutter.io',
     childDirected: false,
-    testDevices: <String>["90AC6E90F00D0E963CDEC31A359461FA"],
+    testDevices: <String>["90AC6E90F00D0E963CDEC31A359461FA", ],
   );
   BannerAd myBanner = BannerAd(
     adUnitId: adUnitId,

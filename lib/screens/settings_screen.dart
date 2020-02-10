@@ -6,7 +6,7 @@ import 'package:mini_pocket_personal_trainer/screens/about_screen.dart';
 import 'package:mini_pocket_personal_trainer/screens/support_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
-  UserModel model;
+  final UserModel model;
 
   SettingsScreen(this.model);
 
@@ -46,7 +46,7 @@ class SettingsScreen extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 Icon(
-                  Icons.info,
+                  Icons.notifications,
                   size: 60.0,
                 ),
                 Text(
