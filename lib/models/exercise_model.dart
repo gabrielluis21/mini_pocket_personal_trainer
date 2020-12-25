@@ -25,13 +25,13 @@ class ExercisesModel extends Model {
 
     exercises.add(exercise);
 
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection("users")
-        .document(user.firebaseUser.uid)
+        .doc(user.firebaseUser.uid)
         .collection("myExercises")
         .add(exercise.toMap())
         .then((doc) {
-      exercise.categoryId = doc.documentID;
+      exercise.categoryId = doc.id;
 
       onSuccess();
       isLoading = false;
@@ -46,11 +46,11 @@ class ExercisesModel extends Model {
   }
 
   void removeExercise(UserExercises exercise) {
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection("users")
-        .document(user.firebaseUser.uid)
+        .doc(user.firebaseUser.uid)
         .collection("myExercises")
-        .document(exercise.categoryId)
+        .doc(exercise.categoryId)
         .delete();
 
     exercises.remove(exercise);
@@ -61,23 +61,24 @@ class ExercisesModel extends Model {
   void insertExercise(UserExercises exercise, int index) {
     exercises.insert(index, exercise);
 
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection("users")
-        .document(user.firebaseUser.uid)
+        .doc(user.firebaseUser.uid)
         .collection("myExercises")
-        .add(exercise.toMap());
+        .doc(exercise.categoryId)
+        .update(exercise.toMap());
 
     notifyListeners();
   }
 
   void getAllExercises() {
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection("users")
-        .document(user.firebaseUser.uid)
+        .doc(user.firebaseUser.uid)
         .collection("myExercises")
-        .getDocuments()
+        .get()
         .then((snapshot) {
-      snapshot.documents.map((doc) {
+      snapshot.docs.map((doc) {
         exercises.add(UserExercises.fromDocument(doc));
       });
     });
@@ -89,12 +90,12 @@ class ExercisesModel extends Model {
     isLoading = true;
     notifyListeners();
 
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("users")
-        .document(user.firebaseUser.uid)
+        .doc(user.firebaseUser.uid)
         .collection("myExercises")
-        .document(exercise.categoryId)
-        .setData(exercise.toMap(), merge: true);
+        .doc(exercise.categoryId)
+        .update(exercise.toMap());
 
     isLoading = false;
     notifyListeners();

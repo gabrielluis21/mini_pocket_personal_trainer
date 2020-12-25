@@ -16,14 +16,14 @@ class UserExercises {
   UserExercises();
 
   UserExercises.fromDocument(DocumentSnapshot doc) {
-    categoryId = doc.documentID;
-    categoryExercise = doc.data["category"];
-    exerciseId = doc.data["exerciseId"];
-    quantity = doc.data["quantity"];
-    isDone = doc.data["isDone"];
-    dateMarked = DateTime.parse(doc.data["date"]);
-    doneIn = isDone ? DateTime.parse(doc.data["doneIn"]) : dateMarked;
-    exerciseData = ExerciseData.fromMap(doc.data["exercise"]);
+    categoryId = doc.id;
+    categoryExercise = doc.data()["category"];
+    exerciseId = doc.data()["exerciseId"];
+    quantity = doc.data()["quantity"];
+    isDone = doc.data()["isDone"];
+    dateMarked = DateTime.parse(doc.data()["date"]);
+    doneIn = isDone ? DateTime.parse(doc.data()["doneIn"]) : dateMarked;
+    exerciseData = ExerciseData.fromMap(doc.data()["exercise"]);
     exerciseData.id = exerciseId;
   }
 

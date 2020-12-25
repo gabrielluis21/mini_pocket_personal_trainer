@@ -6,13 +6,14 @@ import 'package:mini_pocket_personal_trainer/models/exercise_model.dart';
 import 'package:mini_pocket_personal_trainer/screens/home_screen.dart';
 import 'package:mini_pocket_personal_trainer/screens/login_screen.dart';
 import 'package:scoped_model/scoped_model.dart';
-
+import 'package:firebase_core/firebase_core.dart';
 import 'models/user_model.dart';
 
 const String appId = "ca-app-pub-8831023011848191~6860707039";
 
 void main() async {
   runApp(MyApp());
+  await Firebase.initializeApp();
   await FirebaseAdMob.instance.initialize(appId: appId);
 }
 

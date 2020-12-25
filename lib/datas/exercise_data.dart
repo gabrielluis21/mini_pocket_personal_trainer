@@ -11,10 +11,10 @@ class ExerciseData {
   List images;
 
   ExerciseData.fromDocument(DocumentSnapshot doc) {
-    id = doc.documentID;
-    name = doc.data["name"];
-    description = doc.data["description"];
-    images = doc.data["images"];
+    id = doc.id;
+    name = doc.data()["name"];
+    description = doc.data()["description"];
+    images = doc.data()["images"];
   }
 
   ExerciseData.fromMap(Map exercise) {

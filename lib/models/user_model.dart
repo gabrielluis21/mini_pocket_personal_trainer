@@ -9,7 +9,7 @@ import 'package:scoped_model/scoped_model.dart';
 
 class UserModel extends Model {
   FirebaseAuth _auth = FirebaseAuth.instance;
-  FirebaseUser firebaseUser;
+  User firebaseUser;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   final FacebookLogin facebookLogin = FacebookLogin();
 
@@ -108,7 +108,7 @@ class UserModel extends Model {
   }
 
   userSignOut() {
-    switch (firebaseUser.providerId) {
+    switch (firebaseUser.providerData.first.providerId) {
       case 'facebook.com':
         _signOutFacebook();
         break;
@@ -190,32 +190,32 @@ class UserModel extends Model {
 
   _updateUserData(Map<String, dynamic> userData) async {
     this.user = userData;
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("users")
-        .document(firebaseUser.uid)
-        .setData(userData, merge: true);
+        .doc(firebaseUser.uid)
+        .update(userData);
   }
 
   Future<Null> _saveUserData(Map<String, dynamic> userData) async {
     this.user = userData;
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("users")
-        .document(firebaseUser.uid)
-        .setData(userData);
+        .doc(firebaseUser.uid)
+        .set(userData);
   }
 
   _getCurrentUser() async {
     isLoading = true;
     notifyListeners();
 
-    if (firebaseUser == null) firebaseUser = await _auth.currentUser();
+    if (firebaseUser == null) firebaseUser = await _auth.currentUser;
     if (firebaseUser != null) {
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection("users")
-          .document(firebaseUser.uid)
+          .doc(firebaseUser.uid)
           .get()
           .then((user) {
-        this.user = user.data;
+        this.user = user.data();
       });
     }
 

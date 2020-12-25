@@ -25,6 +25,7 @@ class GymTab extends StatelessWidget {
                     child: FlareActor(
                       'assets/animations/WeightSpin.flr',
                       animation: 'Spin',
+                      alignment: Alignment.center,
                     ),
                   ),
                 );
@@ -35,7 +36,7 @@ class GymTab extends StatelessWidget {
                     itemBuilder: (context, index) {
                       GymData academia =
                           GymData.fromDocument(snapshot.data.documents[index]);
-                      if (cityUser.compareTo(academia.city) == 0)
+                      if (cityUser == academia.city)
                         return GymTile(academia);
                       else
                         return Center(child: CircularProgressIndicator());
