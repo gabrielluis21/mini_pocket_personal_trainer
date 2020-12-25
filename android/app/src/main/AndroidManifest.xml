@@ -16,7 +16,6 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:name="io.flutter.app.FlutterApplication"
         android:label="My Pocket Personal Trainer"
         android:icon="@mipmap/ic_launcher">
 
@@ -38,14 +37,14 @@
                  until Flutter renders its first frame. It can be removed if
                  there is no splash screen (such as the default splash screen
                  defined in @style/LaunchTheme). -->
-            <meta-data
-                android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"
-                android:value="true" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

@@ -25,27 +25,28 @@ dependencies:
   cupertino_icons: ^0.1.3
   font_awesome_flutter: ^8.5.0
   share: ^0.6.3+5
-  cloud_firestore: ^0.13.0+1
+  cloud_firestore: ^0.13.2
   scoped_model: ^1.0.1
-  firebase_auth: ^0.15.3
+  firebase_auth: ^0.15.4
   google_sign_in: ^4.1.1
-  material_design_icons_flutter: ^3.4.4795
+  material_design_icons_flutter: ^3.4.4995
   firebase_storage: ^3.1.1
-  image_picker: ^0.6.2+3
+  image_picker: ^0.6.3+1
   carousel_pro: ^1.0.0
   transparent_image: ^1.0.0
-  flutter_map: ^0.8.0
+  flutter_map: ^0.8.2
   firebase_admob: ^0.9.0+10
-  geolocator: ^5.1.5
+  geolocator: ^5.2.1
   geocoder: ^0.2.1
   flutter_facebook_login: ^3.0.0
   http: ^0.12.0+4
-  audioplayers: ^0.13.5
-  qr_flutter: ^3.1.0
-  flare_flutter: ^1.8.3
+  audioplayers: ^0.14.0
+  qr_flutter: ^3.2.0
+  flare_flutter: ^2.0.1
   masked_text: ^0.0.6
   firebase_messaging: ^6.0.9
   cached_network_image: ^2.0.0
+
 
 
 dev_dependencies:

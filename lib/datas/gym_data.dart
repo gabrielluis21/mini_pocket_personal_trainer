@@ -5,22 +5,19 @@ class GymData {
   String address;
   String city;
   String state;
-  List<String> phone;
+  List phones;
 
   List images;
 
-  double latitude;
-  double longitude;
+  Map<dynamic, dynamic> location = Map();
 
   GymData.fromDocument(DocumentSnapshot doc) {
     this.name = doc.data["name"];
     this.address = doc.data["address"];
-    this.phone = doc.data["phone"];
+    this.phones = doc.data["phones"];
     this.city = doc.data["city"];
     this.state = doc.data["state"];
     this.images = doc.data["images"];
-
-    this.longitude = doc.data["location"]["longitude"];
-    this.latitude = doc.data["location"]["latitude"];
+    this.location = doc.data["location"];
   }
 }

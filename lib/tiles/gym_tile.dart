@@ -1,12 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_pocket_personal_trainer/datas/gym_data.dart';
 import 'package:mini_pocket_personal_trainer/screens/gym_screen.dart';
 
 class GymTile extends StatelessWidget {
+  final GymData academia;
 
- final GymData academia;
-
- GymTile(this.academia);
+  GymTile(this.academia);
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +17,14 @@ class GymTile extends StatelessWidget {
           children: <Widget>[
             Flexible(
               flex: 1,
-              child: Image.network(academia.images[0],
-                fit: BoxFit.cover, height: 150.0,),
+              child: CachedNetworkImage(
+                imageUrl: academia.images.first,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => FlareActor(
+                  'assets/animations/WeightSpin.flr',
+                  animation: 'Spin',
+                ),
+              ),
             ),
             Flexible(
               flex: 1,
@@ -26,13 +33,16 @@ class GymTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(academia.name,
-                      style: TextStyle(fontSize: 18.0,
-                          fontWeight: FontWeight.w500),
+                    Text(
+                      academia.name,
+                      style: TextStyle(
+                          fontSize: 18.0, fontWeight: FontWeight.w500),
                     ),
-                    Text(academia.address,
-                      style: TextStyle(fontSize: 16.0,
-                          fontWeight: FontWeight.w500),)
+                    Text(
+                      academia.address,
+                      style: TextStyle(
+                          fontSize: 16.0, fontWeight: FontWeight.w500),
+                    )
                   ],
                 ),
               ),
@@ -40,10 +50,9 @@ class GymTile extends StatelessWidget {
           ],
         ),
       ),
-      onTap: (){
-        Navigator.of(context).push(
-          MaterialPageRoute(builder:(context) => GymScreen(academia))
-        );
+      onTap: () {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => GymScreen(academia)));
       },
     );
   }
