@@ -16,15 +16,15 @@ class CategoryScreen extends StatelessWidget {
       padding: EdgeInsets.only(bottom: 50),
       child: Scaffold(
           appBar: AppBar(
-            title: Text(_doc.data["title"]),
+            title: Text(_doc.data()["title"]),
             centerTitle: true,
           ),
           body: FutureBuilder<QuerySnapshot>(
-            future: Firestore.instance
+            future: FirebaseFirestore.instance
                 .collection("exercicios")
-                .document(_doc.documentID)
+                .doc(_doc.id)
                 .collection("itens")
-                .getDocuments(),
+                .get(),
             builder: (context, snapshot) {
               if (!snapshot.hasData)
                 return Center(
@@ -38,15 +38,15 @@ class CategoryScreen extends StatelessWidget {
                   ),
                 );
 
-              print(snapshot.data.documents.length);
+              print(snapshot.data.docs.length);
               return ListView.builder(
                   padding: EdgeInsets.all(4.0),
-                  itemCount: snapshot.data.documents.length,
+                  itemCount: snapshot.data.docs.length,
                   itemBuilder: (context, index) {
                     ExerciseData exercise;
                     exercise = ExerciseData.fromDocument(
-                        snapshot.data.documents[index]);
-                    exercise.category = _doc.data["title"];
+                        snapshot.data.docs[index]);
+                    exercise.category = _doc.data()["title"];
                     return ExerciseTile(exercise);
                   });
             },

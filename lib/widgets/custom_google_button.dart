@@ -15,13 +15,18 @@ class CustomGoogleLoginButton extends StatelessWidget {
 
   Future<Position> getLocation() async {
     Position current = Position();
-    await Geolocator()
-        .getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high,
-            locationPermissionLevel: GeolocationPermission.locationAlways)
-        .then((position) {
-      current = position;
-    });
+    await Geolocator.checkPermission().then(
+      (value) async {
+        if(value.index == 3){
+          await Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.high,
+              forceAndroidLocationManager: true)
+              .then((position) {
+            current = position;
+          });
+        }
+      });
+
     return current;
   }
 
@@ -81,7 +86,7 @@ class CustomGoogleLoginButton extends StatelessWidget {
     final GoogleSignInAuthentication googleSignInAuthentication =
         await googleSignInAccount.authentication;
 
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
+    final AuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleSignInAuthentication.accessToken,
       idToken: googleSignInAuthentication.idToken,
     );

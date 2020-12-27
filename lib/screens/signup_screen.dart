@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -22,16 +23,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _emailController = TextEditingController();
   final _passwdController = TextEditingController();
   String profilePhoto;
+  ImagePicker picker;
+
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   Future<Position> getLocation() async {
     Position current = Position();
-    await Geolocator()
+    await Geolocator
         .getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high,
-            locationPermissionLevel: GeolocationPermission.locationAlways)
-        .then((position) {
-      current = position;
-    });
+          desiredAccuracy: LocationAccuracy.high,
+          forceAndroidLocationManager: true
+        ).then((position) {
+          current = position;
+        });
     return current;
   }
 
@@ -68,17 +76,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                   onTap: () {
-                    ImagePicker.pickImage(source: ImageSource.camera)
+                      picker.getImage(source: ImageSource.camera)
                         .then((file) async {
                       if (file == null) return;
-                      StorageUploadTask task = FirebaseStorage.instance
+                      UploadTask task = FirebaseStorage.instance
                           .ref()
                           .child("photos")
                           .child("profilePhotos")
                           .child(model.firebaseUser.uid +
                               DateTime.now().millisecondsSinceEpoch.toString())
-                          .putFile(file);
-                      StorageTaskSnapshot snap = await task.onComplete;
+                          .putFile(new File(file.path));
+                      TaskSnapshot snap = task.snapshot;
                       setState(() async {
                         profilePhoto = await snap.ref.getDownloadURL();
                       });
@@ -179,7 +187,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _onSuccess() {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text("Usuário criado com sucesso!"),
       backgroundColor: Theme.of(context).primaryColor,
       duration: Duration(seconds: 2),
@@ -191,7 +199,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _onFail() {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text("Falha ao criar usuário!"),
       backgroundColor: Colors.redAccent,
       duration: Duration(seconds: 3),

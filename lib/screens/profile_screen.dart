@@ -79,22 +79,22 @@ class ProfileScreen extends StatelessWidget {
             height: 10.0,
           ),
           FutureBuilder<QuerySnapshot>(
-            future: Firestore.instance
+            future: FirebaseFirestore.instance
                 .collection("users")
-                .document(_model.firebaseUser.uid)
+                .doc(_model.firebaseUser.uid)
                 .collection("myExercises")
-                .getDocuments(),
+                .get(),
             builder: (context, snapshot) {
               if (!snapshot.hasData)
                 return Center(
                   child: CircularProgressIndicator(),
                 );
-              int isDone = snapshot.data.documents
-                  .where((e) => e.data["isDone"] == true)
+              int isDone = snapshot.data.docs
+                  .where((e) => e.data()["isDone"] == true)
                   .toList()
                   .length;
-              int notDone = snapshot.data.documents
-                  .where((e) => e.data["isDone"] == false)
+              int notDone = snapshot.data.docs
+                  .where((e) => e.data()["isDone"] == false)
                   .toList()
                   .length;
               return Wrap(
@@ -104,7 +104,7 @@ class ProfileScreen extends StatelessWidget {
                     children: <Widget>[
                       Icon(MdiIcons.target),
                       Text(
-                        "Todos os exercícios: ${snapshot.data.documents.length.toString()}",
+                        "Todos os exercícios: ${snapshot.data.docs.length.toString()}",
                         style: TextStyle(
                             fontSize: 20.0, fontWeight: FontWeight.w400),
                       ),

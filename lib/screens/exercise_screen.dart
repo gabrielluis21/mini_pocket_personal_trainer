@@ -182,7 +182,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                 userExercise.exerciseData = _exercise;
 
                 if (userExercise.dateMarked == null || quant.text.isEmpty) {
-                  _scaffoldKey.currentState.showSnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text("Erro ao Salvar exercício!"),
                       duration: Duration(seconds: 3),
@@ -204,23 +204,22 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
   }
 
   void _onSuccess() {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text("Exercício: \"${_exercise.name}\" adicionado!"),
-      action: SnackBarAction(
-        onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => ToDoListScreen()));
-        },
-        label: "Visualizar",
-      ),
-      duration: Duration(seconds: 5),
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Exercício: \"${_exercise.name}\" adicionado!"),
+          action: SnackBarAction(
+            onPressed: () => Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => ToDoListScreen())),
+          label: "Visualizar",
+        ),
+        duration: Duration(seconds: 5),
     ));
     Navigator.of(context)
         .pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
   }
 
   void _onFail() {
-    _scaffoldKey.currentState.showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text("Erro ao Salvar exercício!"),
         duration: Duration(seconds: 3),

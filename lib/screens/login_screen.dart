@@ -7,6 +7,7 @@ import 'package:mini_pocket_personal_trainer/screens/signup_screen.dart';
 import 'package:mini_pocket_personal_trainer/widgets/custom_facebook_button.dart';
 import 'package:mini_pocket_personal_trainer/widgets/custom_google_button.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -18,6 +19,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _senhaController = TextEditingController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+
+  @override
+  void initState(){
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
             return Form(
               key: _formKey,
               child: ListView(
-                padding: EdgeInsets.all(3.0),
+                padding: EdgeInsets.all(8),
                 children: <Widget>[
                   Align(
                     alignment: Alignment.topCenter,
@@ -100,13 +108,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           onPressed: () {
                             if (_emailController.text.isEmpty)
-                              _scaffoldKey.currentState.showSnackBar(SnackBar(
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                   content: Text(
                                       "Insira o seu e-mail para recuperação!"),
                                   backgroundColor: Colors.redAccent,
                                   duration: Duration(seconds: 3)));
                             else {
-                              _scaffoldKey.currentState.showSnackBar(SnackBar(
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                   content: Text("Confira seu email!"),
                                   backgroundColor:
                                       Theme.of(context).primaryColor,
@@ -179,7 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _onFail() {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text("Falha ao realizar login"),
       backgroundColor: Colors.redAccent,
       duration: Duration(seconds: 2),

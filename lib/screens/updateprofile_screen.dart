@@ -62,7 +62,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                           ImagePicker.pickImage(source: ImageSource.camera)
                               .then((file) async {
                             if (file == null) return;
-                            StorageUploadTask task = FirebaseStorage.instance
+                            UploadTask task = FirebaseStorage.instance
                                 .ref()
                                 .child("photos")
                                 .child("profilePhotos")
@@ -71,7 +71,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                         .millisecondsSinceEpoch
                                         .toString())
                                 .putFile(file);
-                            StorageTaskSnapshot snap = await task.onComplete;
+                            TaskSnapshot snap = task.snapshot;
                             setState(() async {
                               profilePhoto = await snap.ref.getDownloadURL();
                             });
@@ -182,7 +182,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   }
 
   void _onSuccess() {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text("Usuário criado com sucesso!"),
       backgroundColor: Theme.of(context).primaryColor,
       duration: Duration(seconds: 2),
@@ -194,7 +194,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   }
 
   void _onFail() {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text("Falha ao criar usuário!"),
       backgroundColor: Colors.redAccent,
       duration: Duration(seconds: 3),

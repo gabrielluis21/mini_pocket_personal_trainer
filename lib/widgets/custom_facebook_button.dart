@@ -18,10 +18,10 @@ class CustomFacebookLoginButton extends StatelessWidget {
 
   Future<Position> getLocation() async {
     Position current = Position();
-    await Geolocator()
+    await Geolocator
         .getCurrentPosition(
             desiredAccuracy: LocationAccuracy.high,
-            locationPermissionLevel: GeolocationPermission.locationAlways)
+            forceAndroidLocationManager: true)
         .then((position) {
       current = position;
     });
@@ -77,12 +77,13 @@ class CustomFacebookLoginButton extends StatelessWidget {
       user["address"] = value.first.addressLine;
     });
 
-    FacebookLogin facebookLogin = FacebookLogin();
-    FacebookLoginResult facebookLoginResult =
+    final facebookLogin = FacebookLogin();
+    facebookLogin.loginBehavior = FacebookLoginBehavior.webViewOnly;
+    final facebookLoginResult =
         await facebookLogin.logIn(['email', 'public_profile', 'user_hometown']);
 
-    AuthCredential facebookAuthCred = FacebookAuthProvider.getCredential(
-        accessToken: facebookLoginResult.accessToken.token);
+    final facebookAuthCred = FacebookAuthProvider.credential(
+        facebookLoginResult.accessToken.token);
 
     var graphResponse = await http.get(
         'https://graph.facebook.com/v2.12/me?fields=name,' +

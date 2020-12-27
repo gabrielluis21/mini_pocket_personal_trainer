@@ -11,10 +11,11 @@ import 'models/user_model.dart';
 
 const String appId = "ca-app-pub-8831023011848191~6860707039";
 
-void main() async {
-  runApp(MyApp());
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await FirebaseAdMob.instance.initialize(appId: appId);
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {

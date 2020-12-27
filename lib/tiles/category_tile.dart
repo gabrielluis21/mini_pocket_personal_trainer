@@ -15,9 +15,9 @@ class CategoryTile extends StatelessWidget {
       leading: CircleAvatar(
         radius: 25.0,
         backgroundColor: Colors.transparent,
-        backgroundImage: NetworkImage(snapshot.data["icon"]),
+        backgroundImage: NetworkImage(snapshot.data()["icon"]),
       ),
-      title: Text(snapshot.data["title"]),
+      title: Text(snapshot.data()["title"]),
       trailing: Icon(Icons.keyboard_arrow_right),
       onTap: (){
         Navigator.of(context).push(
