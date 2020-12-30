@@ -188,7 +188,7 @@ class UserModel extends Model {
     _auth.sendPasswordResetEmail(email: email);
   }
 
-  _updateUserData(Map<String, dynamic> userData) async {
+  Future<Null> _updateUserData(Map<String, dynamic> userData) async {
     this.user = userData;
     await FirebaseFirestore.instance
         .collection("users")
@@ -204,11 +204,8 @@ class UserModel extends Model {
         .set(userData);
   }
 
-  _getCurrentUser() async {
-    isLoading = true;
-    notifyListeners();
-
-    if (firebaseUser == null) firebaseUser = await _auth.currentUser;
+  Future<Null> _getCurrentUser() async {
+    if (firebaseUser == null) firebaseUser = _auth.currentUser;
     if (firebaseUser != null) {
       await FirebaseFirestore.instance
           .collection("users")
@@ -218,8 +215,19 @@ class UserModel extends Model {
         this.user = user.data();
       });
     }
+  }
 
-    isLoading = false;
-    notifyListeners();
+  Future<bool> autoLogin() async{
+    bool isAutoLogged = false;
+    try{
+      _getCurrentUser();
+      notifyListeners();
+
+      isAutoLogged = true;
+      notifyListeners();
+    }catch(e){
+      print(e);
+    }
+    return isAutoLogged;
   }
 }

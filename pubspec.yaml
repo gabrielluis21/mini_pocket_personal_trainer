@@ -46,7 +46,7 @@ dependencies:
   masked_text: ^0.0.6
   firebase_messaging: ^7.0.3
   cached_network_image: ^2.5.0
-
+  connectivity: ^2.0.2
 
 
 dev_dependencies:
