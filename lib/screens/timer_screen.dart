@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'package:audioplayers/audio_cache.dart';
-import 'package:audioplayers/audioplayers.dart';
+import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_pocket_personal_trainer/datas/user_exercises_data.dart';
 import 'package:mini_pocket_personal_trainer/models/exercise_model.dart';
@@ -24,7 +23,7 @@ class _TimerScreenState extends State<TimerScreen>
 
   AnimationController controller;
 
-  final player = AudioCache();
+  final player = AudioPlayer();
 
   String get timerString {
     Duration duration = controller.duration * controller.value;
@@ -42,8 +41,8 @@ class _TimerScreenState extends State<TimerScreen>
 
   Future<Null> stopAudio() async {
     AudioPlayer audio = AudioPlayer();
-    int result = await audio.stop();
-    if (result == 1) {
+    final state = audio.state;
+    if (state == AudioPlayerState.STOPPED) {
       exercise.isDone = true;
       ExercisesModel.of(context).updateExercise(exercise);
       Navigator.of(context).pop();
@@ -136,9 +135,7 @@ class _TimerScreenState extends State<TimerScreen>
                                           .whenComplete(() {
                                         player
                                             .play('alarm.mp3',
-                                                mode: PlayerMode.LOW_LATENCY,
-                                                stayAwake: false,
-                                                isNotification: true)
+                                                isLocal: true)
                                             .timeout(Duration(microseconds: 5),
                                                 onTimeout: stopAudio);
                                       });

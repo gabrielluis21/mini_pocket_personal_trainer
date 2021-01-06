@@ -40,13 +40,13 @@ dependencies:
   geocoder: ^0.2.1
   flutter_facebook_login: ^3.0.0
   http: ^0.12.2
-  audioplayers: ^0.17.0
+  audioplayer: ^0.8.1
   qr_flutter: ^3.2.0
   flare_flutter: ^2.0.6
   masked_text: ^0.0.6
   firebase_messaging: ^7.0.3
   cached_network_image: ^2.5.0
-  connectivity: ^2.0.2
+  shared_preferences: ^0.5.12+4
 
 
 dev_dependencies:
@@ -73,6 +73,7 @@ flutter:
     - assets/images/logo.png
     - assets/images/person.png
     - assets/images/empty.png
+    - assets/images/attention_sign.png
     - assets/alarm.mp3
     - assets/animations/WeightSpin.flr
 
