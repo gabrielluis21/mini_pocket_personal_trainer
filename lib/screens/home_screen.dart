@@ -25,6 +25,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _pageController = PageController();
+  final picker = ImagePicker();
 
   static final MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
     keywords: <String>['fitness', 'fitness apps', 'fitness equipament', 'gym'],
@@ -81,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             size: 25.0,
                           ),
                           onPressed: () async {
-                            File imgFile = await ImagePicker.pickImage(
+                            PickedFile imgFile = await picker.getImage(
                                 source: ImageSource.camera);
                             if (imgFile == null) return;
 
@@ -89,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        SharePhotoScreen(imgFile)));
+                                        SharePhotoScreen(new File(imgFile.path))));
                           },
                         )
                       ]),

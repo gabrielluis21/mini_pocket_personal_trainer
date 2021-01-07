@@ -1,11 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mini_pocket_personal_trainer/datas/user_exercises_data.dart';
 import 'package:mini_pocket_personal_trainer/models/user_model.dart';
 import 'package:mini_pocket_personal_trainer/screens/profile_screen.dart';
-import 'package:mini_pocket_personal_trainer/screens/todolist_screen.dart';
-import 'package:mini_pocket_personal_trainer/tiles/user_exercise_tile.dart';
+import 'package:mini_pocket_personal_trainer/widgets/userExercise_list.dart';
 
 class UserTab extends StatelessWidget {
   final UserModel model;
@@ -28,7 +25,7 @@ class UserTab extends StatelessWidget {
                 child: CircleAvatar(
                   maxRadius: 65.0,
                   backgroundImage: model.user["profilePhoto"] != null
-                      ? NetworkImage(model.firebaseUser.photoUrl)
+                      ? NetworkImage(model.firebaseUser.photoURL)
                       : AssetImage("assets/images/person.png"),
                 ),
               ),
@@ -43,42 +40,7 @@ class UserTab extends StatelessWidget {
             ],
           ),
         ),
-        Flexible(
-          fit: FlexFit.tight,
-          flex: 6,
-          child: FutureBuilder(
-            future: Firestore.instance
-                .collection("users")
-                .document(model.firebaseUser.uid)
-                .collection("myExercises")
-                .getDocuments(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData)
-                return Center(
-                  child: Text(
-                    "Sem exercícios para fazer!",
-                    style:
-                        TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
-                  ),
-                );
-
-              return GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ToDoListScreen()));
-                },
-                child: ListView.builder(
-                    itemCount: snapshot.data.documents.length,
-                    itemBuilder: (context, index) {
-                      UserExercises exercise;
-                      exercise = UserExercises.fromDocument(
-                          snapshot.data.documents[index]);
-                      return UserExerciseTile(exercise);
-                    }),
-              );
-            },
-          ),
-        )
+        UserExerciseList(model),
       ],
     );
   }

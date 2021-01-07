@@ -15,32 +15,26 @@ class GymTab extends StatelessWidget {
           String cityUser = model.user["city"];
 
           return FutureBuilder<QuerySnapshot>(
-            future: Firestore.instance.collection("academia").getDocuments(),
+            future: FirebaseFirestore.instance.collection("academia").get(),
             builder: (context, snapshot) {
               if (!snapshot.hasData)
                 return Center(
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    child: FlareActor(
+                  child:  FlareActor(
                       'assets/animations/WeightSpin.flr',
                       animation: 'Spin',
                       alignment: Alignment.center,
                     ),
-                  ),
                 );
-              else
-                return ListView.builder(
-                    padding: EdgeInsets.all(4.0),
-                    itemCount: snapshot.data.documents.length,
-                    itemBuilder: (context, index) {
-                      GymData academia =
-                          GymData.fromDocument(snapshot.data.documents[index]);
-                      if (cityUser == academia.city)
-                        return GymTile(academia);
-                      else
-                        return Center(child: CircularProgressIndicator());
-                    });
+              return ListView.builder(
+                padding: EdgeInsets.all(4.0),
+                itemCount: snapshot.data.docs.length,
+                itemBuilder: (context, index) {
+                  GymData academia =
+                       GymData.fromDocument(snapshot.data.docs[index]);
+
+                  return GymTile(academia);
+                }
+              );
             },
           );
         },

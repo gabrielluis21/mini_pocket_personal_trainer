@@ -38,7 +38,6 @@ class CategoryScreen extends StatelessWidget {
                   ),
                 );
 
-              print(snapshot.data.docs.length);
               return ListView.builder(
                   padding: EdgeInsets.all(4.0),
                   itemCount: snapshot.data.docs.length,

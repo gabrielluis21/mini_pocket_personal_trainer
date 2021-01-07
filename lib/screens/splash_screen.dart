@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:mini_pocket_personal_trainer/animation/logo_animation.dart';
 import 'package:mini_pocket_personal_trainer/models/user_model.dart';
@@ -7,41 +5,36 @@ import 'package:mini_pocket_personal_trainer/painter/custom_hole_painter.dart';
 import 'package:mini_pocket_personal_trainer/screens/home_screen.dart';
 import 'package:mini_pocket_personal_trainer/screens/how_to_use_screen.dart';
 import 'package:mini_pocket_personal_trainer/screens/login_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 class SplashScreen extends StatefulWidget {
+  final isFirstLaunch;
+
+  SplashScreen(this.isFirstLaunch);
+
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  _SplashScreenState createState() => _SplashScreenState(isFirstLaunch);
 }
 
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+  final isFirstLaunch;
+  _SplashScreenState(this.isFirstLaunch);
+
   AnimationController _controller;
   LogoAnimation _logo;
 
-  int isFirstInit =0;
-
-  Future<int> checkIfIsTheFirstInit() async{
-    final prefs = await SharedPreferences.getInstance();
-    final launcherCount = prefs.getInt('counter') ?? 0;
-    prefs.setInt('counter', launcherCount+1);
-    return launcherCount;
-  }
-
   void hasAutoLogged(){
-    UserModel.of(context).autoLogin()
-      .then((value) => value ? Navigator.of(context)
-        .pushReplacement(
-          MaterialPageRoute(builder: (context)=> HomeScreen())
-        ) :
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context)=> LoginScreen()))
-    );
+    UserModel.of(context).autoLogin() ?
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context)=> HomeScreen()))
+      :
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context)=> LoginScreen()));
   }
 
   @override
   void initState() {
-
-    checkIfIsTheFirstInit().then((value) => isFirstInit = value);
+    super.initState();
 
     _controller = AnimationController(
        duration: const Duration(milliseconds: 3000),
@@ -52,12 +45,11 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        isFirstInit > 0 ? hasAutoLogged() : Navigator.of(context).pushReplacement(
+        isFirstLaunch != 0 ? hasAutoLogged() : Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => HowToUseScreen())
         );
       }
     });
-    super.initState();
   }
 
   @override

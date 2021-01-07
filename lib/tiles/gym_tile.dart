@@ -1,5 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_pocket_personal_trainer/datas/gym_data.dart';
 import 'package:mini_pocket_personal_trainer/screens/gym_screen.dart';
@@ -17,14 +15,12 @@ class GymTile extends StatelessWidget {
           children: <Widget>[
             Flexible(
               flex: 1,
-              child: CachedNetworkImage(
-                imageUrl: academia.images.first,
+              child: academia.images.isNotEmpty ?
+               Image.network(
+                academia.images.first,
                 fit: BoxFit.cover,
-                placeholder: (context, url) => FlareActor(
-                  'assets/animations/WeightSpin.flr',
-                  animation: 'Spin',
-                ),
-              ),
+                height: 100,
+              ) : Image.asset("assets/images/empty.png"),
             ),
             Flexible(
               flex: 1,

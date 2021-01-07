@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:mini_pocket_personal_trainer/models/user_model.dart';
+import 'package:mini_pocket_personal_trainer/screens/login_screen.dart';
 import 'package:mini_pocket_personal_trainer/screens/updateprofile_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -136,7 +137,14 @@ class ProfileScreen extends StatelessWidget {
           )
         ]),
         floatingActionButton: FloatingActionButton.extended(
-            onPressed: () {}, label: Text("Desativar conta")),
+            onPressed: () async{
+              await FirebaseFirestore.instance.collection('user')
+              .doc(_model.firebaseUser.uid).delete();
+              _model.firebaseUser.delete().then(
+                 (value) => Navigator.of(context).pushReplacement(
+                   MaterialPageRoute(builder: (context) => LoginScreen())
+                 ));
+            }, label: Text("Desativar conta")),
       ),
     );
   }

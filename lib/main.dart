@@ -5,14 +5,21 @@ import 'package:mini_pocket_personal_trainer/models/exercise_model.dart';
 import 'package:mini_pocket_personal_trainer/screens/splash_screen.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'models/user_model.dart';
 
 const String appId = "ca-app-pub-8831023011848191~6860707039";
 
+int firstLaunch = 0;
+
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  await FirebaseAdMob.instance.initialize(appId: appId);
+  final prefs = await SharedPreferences.getInstance();
+  firstLaunch = prefs.getInt('counter') ?? 0;
+  prefs.setInt('counter', firstLaunch+1);
+  await Firebase.initializeApp().then((_) async =>
+    await FirebaseAdMob.instance.initialize(appId: appId)
+  );
   runApp(MyApp());
 }
 
@@ -22,6 +29,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +50,7 @@ class _MyAppState extends State<MyApp> {
                 primaryColor: Color.fromARGB(255, 90, 90, 253),
               ),
               debugShowCheckedModeBanner: false,
-              home: SplashScreen(),
+              home: SplashScreen(firstLaunch),
             ),
           );
         },

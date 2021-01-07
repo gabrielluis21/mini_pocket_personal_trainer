@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,6 +23,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final _cityController = TextEditingController();
   final _passwdController = TextEditingController();
   String profilePhoto;
+  final picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +61,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     children: <Widget>[
                       GestureDetector(
                         onTap: () {
-                          ImagePicker.pickImage(source: ImageSource.camera)
+                          picker.getImage(source: ImageSource.camera)
                               .then((file) async {
                             if (file == null) return;
                             UploadTask task = FirebaseStorage.instance
@@ -67,10 +69,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                 .child("photos")
                                 .child("profilePhotos")
                                 .child(model.firebaseUser.uid +
-                                    DateTime.now()
-                                        .millisecondsSinceEpoch
-                                        .toString())
-                                .putFile(file);
+                                DateTime.now().millisecondsSinceEpoch.toString())
+                                .putFile(new File(file.path));
                             TaskSnapshot snap = task.snapshot;
                             setState(() async {
                               profilePhoto = await snap.ref.getDownloadURL();

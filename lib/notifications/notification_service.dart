@@ -51,12 +51,11 @@ class NotificationServices {
 
   _saveDeviceToken(Map<String, dynamic> dataNotify, UserModel user) async {
     if (token != null) {
-      Firestore.instance
+      FirebaseFirestore.instance
           .collection("users")
-          .document(user.firebaseUser.uid)
+          .doc(user.firebaseUser.uid)
           .collection("NotificationSettings")
-          .document()
-          .setData(dataNotify);
+          .doc().set(dataNotify);
     }
   }
 }

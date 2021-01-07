@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserModel extends Model {
   FirebaseAuth _auth = FirebaseAuth.instance;
   User firebaseUser;
+
   final GoogleSignIn googleSignIn = GoogleSignIn();
   final FacebookLogin facebookLogin = FacebookLogin();
 
@@ -217,9 +219,10 @@ class UserModel extends Model {
     }
   }
 
-  Future<bool> autoLogin() async{
+  bool autoLogin() {
     bool isAutoLogged = false;
-    try{
+
+    try {
       _getCurrentUser();
       notifyListeners();
 
@@ -228,6 +231,7 @@ class UserModel extends Model {
     }catch(e){
       print(e);
     }
+
     return isAutoLogged;
   }
 }

@@ -7,22 +7,17 @@ class CategoryTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<QuerySnapshot>(
-      future: Firestore.instance.collection("exercicios").getDocuments(),
+      future: FirebaseFirestore.instance.collection("exercicios").get(),
       builder: (context, snapshot) {
         if (!snapshot.hasData)
           return Center(
-            child: Container(
-              width: 100,
-              height: 100,
-              child: FlareActor(
+            child:  FlareActor(
                 'assets/animations/WeightSpin.flr',
                 animation: 'Spin',
               ),
-            ),
           );
-        else {
           var dividedTiles = ListTile.divideTiles(
-            tiles: snapshot.data.documents
+            tiles: snapshot.data.docs
                 .map((doc) => CategoryTile(doc))
                 .toList(),
             color: Colors.grey[500],
@@ -30,7 +25,6 @@ class CategoryTab extends StatelessWidget {
           ).toList();
 
           return ListView(children: dividedTiles);
-        }
       },
     );
   }

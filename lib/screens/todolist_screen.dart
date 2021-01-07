@@ -55,11 +55,11 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
         body: ScopedModelDescendant<UserModel>(
           builder: (context, child, model) {
             return FutureBuilder<QuerySnapshot>(
-                future: Firestore.instance
+                future: FirebaseFirestore.instance
                     .collection("users")
-                    .document(model.firebaseUser.uid)
+                    .doc(model.firebaseUser.uid)
                     .collection("myExercises")
-                    .getDocuments(),
+                    .get(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData)
                     return Center(
@@ -72,18 +72,18 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                         ),
                       ),
                     );
-                  _toDoList = snapshot.data.documents;
+                  _toDoList = snapshot.data.docs;
                   return RefreshIndicator(
                     onRefresh: () async {
                       await _refresh(_toDoList);
                     },
                     child: ListView.builder(
                       padding: EdgeInsets.all(4.0),
-                      itemCount: snapshot.data.documents.length,
+                      itemCount: snapshot.data.docs.length,
                       itemBuilder: (context, index) {
                         UserExercises exercise;
                         exercise = UserExercises.fromDocument(
-                            snapshot.data.documents[index]);
+                            snapshot.data.docs[index]);
 
                         return GestureDetector(
                           onLongPress: () {
@@ -123,8 +123,8 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                                   ),
                                   duration: Duration(seconds: 2),
                                 );
-                                Scaffold.of(context).removeCurrentSnackBar();
-                                Scaffold.of(context).showSnackBar(snack);
+                                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                                ScaffoldMessenger.of(context).showSnackBar(snack);
                               });
                             },
                             child: CheckboxListTile(

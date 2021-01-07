@@ -63,7 +63,7 @@ class _NotificationsSettingsScreenState
                         isActivated = newValue;
                       });
                     }
-                    scafoldKey.currentState.showSnackBar(SnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(!isActivated
                           ? "Notificações desativadas"
                           : "Notificações ativadas"),
