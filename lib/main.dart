@@ -7,6 +7,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'models/user_model.dart';
+import 'package:theme_manager/theme_manager.dart';
 
 const String appId = "ca-app-pub-8831023011848191~6860707039";
 
@@ -30,31 +31,37 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
-    return ScopedModel<UserModel>(
-      model: UserModel(),
-      child: ScopedModelDescendant<UserModel>(
-        builder: (context, child, model) {
-          return ScopedModel<ExercisesModel>(
-            model: ExercisesModel(model),
-            child: MaterialApp(
-              title: 'Pocket Personal Trainer',
-              theme: ThemeData(
-                primarySwatch: Colors.blue,
-                primaryColor: Color.fromARGB(255, 90, 90, 253),
-              ),
-              debugShowCheckedModeBanner: false,
-              home: SplashScreen(firstLaunch),
-            ),
-          );
-        },
-      )
+    return ThemeManager(
+      defaultBrightnessPreference: BrightnessPreference.light,
+      data: (brightness) => ThemeData(
+        primarySwatch: Colors.blue,
+        primaryColor: Color.fromARGB(255, 90, 90, 253),
+        brightness: brightness
+      ),
+      loadBrightnessOnStart: true,
+      themedWidgetBuilder: (context, theme){
+        return ScopedModel<UserModel>(
+            model: UserModel(),
+            child: ScopedModelDescendant<UserModel>(
+              builder: (context, child, model) {
+                return ScopedModel<ExercisesModel>(
+                  model: ExercisesModel(model),
+                  child: MaterialApp(
+                    title: 'Pocket Personal Trainer',
+                    theme: theme,
+                    debugShowCheckedModeBanner: false,
+                    home: SplashScreen(firstLaunch),
+                  ),
+                );
+              },
+            )
+        );
+      },
     );
   }
 }

@@ -714,6 +714,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.19-nullsafety.6"
+  theme_manager:
+    dependency: "direct main"
+    description:
+      name: theme_manager
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
   transparent_image:
     dependency: transitive
     description:

@@ -47,6 +47,7 @@ dependencies:
   firebase_messaging: ^7.0.3
   cached_network_image: ^2.5.0
   shared_preferences: ^0.5.12+4
+  theme_manager: ^1.0.4
 
 
 dev_dependencies:
