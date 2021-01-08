@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mini_pocket_personal_trainer/models/user_model.dart';
 import 'package:mini_pocket_personal_trainer/screens/profile_screen.dart';
 import 'package:mini_pocket_personal_trainer/widgets/userExercise_list.dart';
+import 'package:theme_manager/theme_manager.dart';
 
 class UserTab extends StatelessWidget {
   final UserModel model;
@@ -20,17 +21,18 @@ class UserTab extends StatelessWidget {
           },
           child: Column(
             children: <Widget>[
-              Align(
+              Padding(padding: const EdgeInsets.only(top: 8, bottom: 8),
+              child: Align(
                 alignment: FractionalOffset.center,
                 child: CircleAvatar(
                   maxRadius: 65.0,
                   backgroundImage: model.user["profilePhoto"] != null
-                      ? NetworkImage(model.firebaseUser.photoURL)
+                      ? NetworkImage(model.user["profilePhoto"])
                       : AssetImage("assets/images/person.png"),
                 ),
-              ),
+              ),),
               Text(
-                "${!model.isLoggedIn() ? "" : model.user["name"]}",
+                "${!model.isLoggedIn() ? " " : model.user["name"]}",
                 style: TextStyle(
                     fontSize: 30.0,
                     fontWeight: FontWeight.bold,
@@ -39,6 +41,16 @@ class UserTab extends StatelessWidget {
               ),
             ],
           ),
+        ),
+        Divider(
+          color: ThemeManager.of(context).brightnessPreference == BrightnessPreference.dark ?
+            Colors.white : Colors.black,
+        ),
+        Text("Meus Exercícios",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900),),
+        Divider(
+          color: ThemeManager.of(context).brightnessPreference == BrightnessPreference.dark ?
+          Colors.white : Colors.black,
         ),
         UserExerciseList(model),
       ],

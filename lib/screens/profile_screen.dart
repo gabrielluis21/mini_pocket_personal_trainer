@@ -13,6 +13,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Padding(
       padding: EdgeInsets.only(bottom: 50.0),
       child: Scaffold(
@@ -31,15 +32,19 @@ class ProfileScreen extends StatelessWidget {
                 }),
           ],
         ),
-        body: ListView(children: <Widget>[
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-            CircleAvatar(
-              maxRadius: 70.0,
-              backgroundImage: _model.user["profilePhoto"] != null
-                  ? NetworkImage(_model.user["profilePhoto"])
-                  : AssetImage("assets/images/person.png"),
+        body: ListView(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 9, bottom: 9),
+              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+                CircleAvatar(
+                  maxRadius: 70.0,
+                  backgroundImage: _model.user["profilePhoto"] != null
+                      ? NetworkImage(_model.user["profilePhoto"])
+                      : AssetImage("assets/images/person.png"),
+                ),
+              ]),
             ),
-          ]),
           Text(
             "${_model.user["name"]}",
             style: TextStyle(
@@ -53,7 +58,6 @@ class ProfileScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 20.0,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
             ),
             textAlign: TextAlign.center,
           ),
@@ -61,8 +65,7 @@ class ProfileScreen extends StatelessWidget {
             "${_model.user["address"]}",
             style: TextStyle(
                 fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
+                fontWeight: FontWeight.bold,),
             textAlign: TextAlign.center,
           ),
           SizedBox(
@@ -98,53 +101,57 @@ class ProfileScreen extends StatelessWidget {
                   .where((e) => e.data()["isDone"] == false)
                   .toList()
                   .length;
-              return Wrap(
-                direction: Axis.vertical,
-                children: <Widget>[
-                  Wrap(
-                    children: <Widget>[
-                      Icon(MdiIcons.target),
-                      Text(
-                        "Todos os exercícios: ${snapshot.data.docs.length.toString()}",
-                        style: TextStyle(
-                            fontSize: 20.0, fontWeight: FontWeight.w400),
-                      ),
-                    ],
-                  ),
-                  Wrap(
-                    children: <Widget>[
-                      Icon(Icons.done_all),
-                      Text(
-                        " Todos os exercícios feitos: ${isDone.toString()}",
-                        style: TextStyle(
-                            fontSize: 20.0, fontWeight: FontWeight.w400),
-                      ),
-                    ],
-                  ),
-                  Wrap(
-                    children: <Widget>[
-                      Icon(Icons.error),
-                      Text(
-                        " Todos os exercícios a fazer: ${notDone.toString()}",
-                        style: TextStyle(
-                            fontSize: 20.0, fontWeight: FontWeight.w400),
-                      ),
-                    ],
-                  ),
-                ],
+              return Center(
+                child: Wrap(
+                  direction: Axis.vertical,
+                  children: <Widget>[
+                    Wrap(
+                      children: <Widget>[
+                        Icon(MdiIcons.target),
+                        Text(
+                          "Todos os exercícios: ${snapshot.data.docs.length.toString()}",
+                          style: TextStyle(
+                              fontSize: 20.0, fontWeight: FontWeight.w400),
+                        ),
+                      ],
+                    ),
+                    Wrap(
+                      children: <Widget>[
+                        Icon(Icons.done_all),
+                        Text(
+                          " Todos os exercícios feitos: ${isDone.toString()}",
+                          style: TextStyle(
+                              fontSize: 20.0, fontWeight: FontWeight.w400),
+                        ),
+                      ],
+                    ),
+                    Wrap(
+                      children: <Widget>[
+                        Icon(Icons.error),
+                        Text(
+                          " Todos os exercícios a fazer: ${notDone.toString()}",
+                          style: TextStyle(
+                              fontSize: 20.0, fontWeight: FontWeight.w400),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               );
             },
           )
         ]),
         floatingActionButton: FloatingActionButton.extended(
-            onPressed: () async{
-              await FirebaseFirestore.instance.collection('user')
-              .doc(_model.firebaseUser.uid).delete();
-              _model.firebaseUser.delete().then(
-                 (value) => Navigator.of(context).pushReplacement(
-                   MaterialPageRoute(builder: (context) => LoginScreen())
-                 ));
-            }, label: Text("Desativar conta")),
+          onPressed: () async{
+            await FirebaseFirestore.instance.collection('user')
+            .doc(_model.firebaseUser.uid).delete();
+            _model.firebaseUser.delete().then(
+              (value) => Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => LoginScreen())
+              ));
+           },
+           icon: Icon(Icons.logout),
+           label: Text("Desativar conta")),
       ),
     );
   }

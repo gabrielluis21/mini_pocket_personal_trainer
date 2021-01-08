@@ -18,6 +18,14 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool isDarkTheme = false;
 
+
+  @override
+  void initState() {
+    super.initState();
+    isDarkTheme = ThemeManager.of(context)
+      .brightnessPreference == BrightnessPreference.dark;
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -51,6 +59,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
              ),
            ],
           ),
+          Divider(color: isDarkTheme ? Colors.white : Colors.black,),
           FlatButton(
             padding: EdgeInsets.all(6.0),
             onPressed: () {
@@ -70,6 +79,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
           ),
+          Divider(color: isDarkTheme ? Colors.white : Colors.black,),
           FlatButton(
             padding: EdgeInsets.all(6.0),
             onPressed: () {
@@ -89,6 +99,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
           ),
+          Divider(color: isDarkTheme ? Colors.white : Colors.black,),
           FlatButton(
             padding: EdgeInsets.all(6.0),
             onPressed: () {
@@ -108,6 +119,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
           ),
+          Divider(color: isDarkTheme ? Colors.white : Colors.black,),
         ],
       ),
     );

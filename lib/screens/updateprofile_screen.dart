@@ -53,7 +53,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
             return Form(
               key: _formKey,
               child: ListView(
-                padding: EdgeInsets.only(left: 4.0, right: 4.0),
+                padding: EdgeInsets.only(left: 8, right: 8, top: 10),
                 children: <Widget>[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -130,6 +130,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     height: 8.0,
                   ),
                   TextFormField(
+                    decoration: InputDecoration(labelText: "Nova senha"),
                     keyboardType: TextInputType.text,
                     obscureText: true,
                     controller: _passwdController,
@@ -139,46 +140,34 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         return "Senha inválida, a senha tem que ter entre 6 a 8 caracteres";
                     },
                   ),
-                  SizedBox(
-                    height: 5.0,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                      borderRadius:
-                          BorderRadius.all(Radius.elliptical(5.0, 5.0)),
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    child: FlatButton(
-                      onPressed: () async {
-                        if (_formKey.currentState.validate()) {
-                          Map<String, dynamic> user = {
-                            "name": _nameController.text,
-                            "address": _addressController.text,
-                            "email": _emailController.text,
-                            "profilePhoto": profilePhoto,
-                            "city": _cityController.text
-                          };
-                          await model.updateProfile(
-                              userData: user,
-                              password: _passwdController.text,
-                              onSuccess: _onSuccess,
-                              onFail: _onFail);
-                        }
-                      },
-                      child: Text(
-                        "Atualizar Conta",
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
                 ],
               ),
             );
           },
         ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: _updateProfile,
+          icon: Icon(Icons.update),
+          label: Text('Atualizar conta')),
       ),
     );
+  }
+
+  void _updateProfile() async{
+    if (_formKey.currentState.validate()) {
+       Map<String, dynamic> user = {
+        "name": _nameController.text,
+        "address": _addressController.text,
+        "email": _emailController.text,
+        "profilePhoto": profilePhoto,
+      "city": _cityController.text
+      };
+      await UserModel.of(context).updateProfile(
+        userData: user,
+        password: _passwdController.text,
+        onSuccess: _onSuccess,
+        onFail: _onFail);
+    }
   }
 
   void _onSuccess() {

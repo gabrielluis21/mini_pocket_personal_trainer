@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flare_flutter/flare_actor.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_pocket_personal_trainer/datas/gym_data.dart';
 import 'package:mini_pocket_personal_trainer/widgets/custom_qr_button.dart';
@@ -61,19 +62,36 @@ class _GymScreenState extends State<GymScreen> {
                 ),
               ),
             ),
-            Text(
-              academia.name,
-              style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  academia.name,
+                  style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
-            Text(
-              academia.address,
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400),
+            Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: Text(
+                academia.address,
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400),
+                softWrap: true,
+              ),
             ),
-            Text(
-              academia.city,
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400),
+            Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: Text(
+                academia.city,
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w400),
+              ),
             ),
-            multiPhoneText(),
+            Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child:  multiPhoneText(),
+            ),
+
             GymMap(
                 latitude: academia.location["latitude"],
                 longitude: academia.location["longitude"]),
@@ -88,11 +106,17 @@ class _GymScreenState extends State<GymScreen> {
   }
 
   Widget multiPhoneText() {
-    return Text(
-      academia.phones.length == 1
-          ? academia.phones.first
-          : '${academia.phones.first} / ${academia.phones.last}',
+    
+    if(academia.phones.length == 1){
+      return Text('${academia.phones.single}',
       style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300),
-    );
+      );  
+    }else {
+      return Text('${
+          academia.phones.join(" , ")
+          }', style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w300),
+      );
+    }
   }
 }
+

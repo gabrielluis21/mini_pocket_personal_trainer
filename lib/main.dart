@@ -18,9 +18,8 @@ void main() async{
   final prefs = await SharedPreferences.getInstance();
   firstLaunch = prefs.getInt('counter') ?? 0;
   prefs.setInt('counter', firstLaunch+1);
-  await Firebase.initializeApp().then((_) async =>
-    await FirebaseAdMob.instance.initialize(appId: appId)
-  );
+  await Firebase.initializeApp();
+  await FirebaseAdMob.instance.initialize(appId: appId);
   runApp(MyApp());
 }
 

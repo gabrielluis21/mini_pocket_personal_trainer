@@ -94,16 +94,20 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                         )
                       ]),
-                  floatingActionButton: FloatingActionButton(
+                  floatingActionButton: FloatingActionButton.extended(
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => ToDoListScreen()));
                     },
-                    child: Icon(Icons.zoom_out_map),
+                    icon: Icon(Icons.zoom_out_map),
+                    label: Text("Ver lista completa"),
                   ),
                   drawerDragStartBehavior: DragStartBehavior.start,
                   drawer: CustomDrawer(_pageController),
-                  body: UserTab(model),
+                  body: Padding(
+                    padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
+                    child: UserTab(model),
+                  ),
                 ),
                 Scaffold(
                   appBar: AppBar(
