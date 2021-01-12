@@ -48,6 +48,7 @@ dependencies:
   cached_network_image: ^2.5.0
   shared_preferences: ^0.5.12+4
   theme_manager: ^1.0.4
+  onesignal_flutter: ^2.6.2
 
 
 dev_dependencies:

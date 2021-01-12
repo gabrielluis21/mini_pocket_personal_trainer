@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:masked_text/masked_text.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:mini_pocket_personal_trainer/animation/loading_button_animation.dart';
 import 'package:mini_pocket_personal_trainer/datas/exercise_data.dart';
 import 'package:mini_pocket_personal_trainer/datas/user_exercises_data.dart';
 import 'package:mini_pocket_personal_trainer/models/exercise_model.dart';
@@ -22,7 +23,9 @@ class ExerciseScreen extends StatefulWidget {
   _ExerciseScreenState createState() => _ExerciseScreenState(_exercise);
 }
 
-class _ExerciseScreenState extends State<ExerciseScreen> {
+class _ExerciseScreenState extends State<ExerciseScreen>
+    with SingleTickerProviderStateMixin {
+
   final ExerciseData _exercise;
   DateTime date;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -34,6 +37,8 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
   final day = TextEditingController();
   final dateTextController = TextEditingController();
 
+  AnimationController _controller;
+
   void showAddDialogForm(){
     showDialog(
       context: context,
@@ -41,7 +46,12 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
         return AlertDialog(
           scrollable: true,
           actions: [
-            FlatButton(
+            LoadingButtonAnimation(
+              controller: _controller,
+              textoButton: "Adicionar",
+              cor: Theme.of(context).primaryColor,
+            ),
+            /*FlatButton(
               onPressed: addExerciseToUserList,
               child: Container(
                 padding: const EdgeInsets.all(10),
@@ -54,7 +64,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                       fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
-            ),
+            ),*/
             IconButton(
               icon: Icon(Icons.close),
               onPressed: () => Navigator.of(context).pop(),
@@ -123,6 +133,23 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
         );
       }
     );
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 2),
+    );
+
+    _controller.addStatusListener((status){
+      if(status == AnimationStatus.completed){
+        addExerciseToUserList();
+      }
+    });
   }
 
   @override

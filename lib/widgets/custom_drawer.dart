@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mini_pocket_personal_trainer/models/user_model.dart';
 import 'package:mini_pocket_personal_trainer/screens/login_screen.dart';
 import 'package:mini_pocket_personal_trainer/tiles/drawer_tiles.dart';
+import 'package:mini_pocket_personal_trainer/screens/profile_screen.dart';
 
 class CustomDrawer extends StatelessWidget {
   final PageController pageController;
@@ -20,21 +20,53 @@ class CustomDrawer extends StatelessWidget {
             Colors.white,
           ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
         );
-
+    final user = UserModel.of(context);
     return Padding(
       padding: EdgeInsets.only(top: 21.5),
       child: Drawer(
-          child: Stack(children: <Widget>[
-        _buildDrawerBack(),
-        ListView(
+        child: Stack(children: <Widget>[
+            _buildDrawerBack(),
+          ListView(
           children: <Widget>[
-            Text(
-              "Menu Principal",
-              style: TextStyle(
-                  fontSize: 32.0,
-                  fontWeight: FontWeight.w500,
-                  fontStyle: FontStyle.italic,
-                  color: Colors.white),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("Bem vindo!",
+                  style: TextStyle( fontSize: 32.0, fontWeight: FontWeight.w500,
+                  fontStyle: FontStyle.italic, color: Colors.white),
+                ),
+                UserAccountsDrawerHeader(
+                   onDetailsPressed: () => Navigator.of(context).push(
+                       MaterialPageRoute(builder: (context) => ProfileScreen(user) )
+                   ),
+                   accountName: Text(user.user['name']),
+                   accountEmail: Text(user.user['email']),
+
+                   currentAccountPicture: CircleAvatar(
+                     maxRadius: 65.0,
+                     backgroundImage: user.user["profilePhoto"] != null
+                         ? NetworkImage(user.user["profilePhoto"])
+                         : AssetImage("assets/images/person.png"),
+                   ),
+                 ),
+              ],
+            ),
+            Divider(
+              color: Colors.white,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Menu Principal",
+                  style: TextStyle(
+                      fontSize: 32.0,
+                      fontWeight: FontWeight.w500,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.white),
+                ),
+              ],
             ),
             Divider(
               color: Colors.white,

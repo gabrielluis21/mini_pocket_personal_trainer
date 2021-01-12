@@ -82,11 +82,13 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 top: _logo.dropPosition.value * MediaQuery.of(context).size.height,
                 left: MediaQuery.of(context).size.width / 2 - _logo.logoSize.value / 2,
                 child: Visibility(
-                  child: Image.asset("assets/images/logo.png",
+                  child: SizedBox(
                     height: _logo.logoSize.value,
                     width: _logo.logoSize.value,
-                    fit: BoxFit.cover,
-                    filterQuality: FilterQuality.high,
+                    child: CircleAvatar(
+                      maxRadius: _logo.logoSize.value,
+                      backgroundImage: AssetImage("assets/images/logo.png",),
+                    ),
                   ),
                   visible: _logo.logoVisible.value,
                 ),

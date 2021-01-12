@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mini_pocket_personal_trainer/animation/stagger_animation.dart';
 import 'package:mini_pocket_personal_trainer/models/user_model.dart';
 import 'package:mini_pocket_personal_trainer/screens/home_screen.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -14,7 +15,9 @@ class SignUpScreen extends StatefulWidget {
   _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpScreenState extends State<SignUpScreen>
+  with SingleTickerProviderStateMixin {
+
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _nameController = TextEditingController();
@@ -25,10 +28,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String profilePhoto;
   ImagePicker picker;
 
+  AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 2),
+    );
+
+    _controller.addStatusListener((status){
+      if(status == AnimationStatus.completed){
+        _saveProfile();
+      }
+    });
   }
 
   Future<Position> getLocation() async {
@@ -61,20 +76,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
           return Form(
             key: _formKey,
             child: ListView(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.only(left: 8, right: 8),
               children: <Widget>[
                 GestureDetector(
-                  child: Container(
-                    width: 140.0,
-                    height: 140.0,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                          image: profilePhoto != null
-                              ? Image.network(profilePhoto)
-                              : AssetImage("images/person.png")),
-                    ),
-                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 9, bottom: 9),
+                    child: CircleAvatar(
+                      backgroundImage: profilePhoto != null
+                       ? Image.network(profilePhoto)
+                        : AssetImage("images/person.png")),
+                   ),
                   onTap: () {
                       picker.getImage(source: ImageSource.camera)
                         .then((file) async {
@@ -144,39 +155,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   },
                   obscureText: true,
                 ),
-                SizedBox(
-                  height: 16.0,
-                ),
-                RaisedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState.validate()) {
-                      Map<String, double> pos = Map();
-                      await getLocation().then((position) {
-                        pos["latitude"] = position.latitude;
-                        pos["longitude"] = position.longitude;
-                      });
-                      Map<String, dynamic> user = {
-                        "name": _nameController.text,
-                        "address": _addressController.text,
-                        "email": _emailController.text,
-                        "profilePhoto": profilePhoto,
-                        "city": _cityController.text,
-                        "currentLocation": pos,
-                        "physicalRatings": 0
-                      };
-                      await model.signUp(
-                          userData: user,
-                          email: _emailController.text,
-                          passwd: _passwdController.text,
-                          onSuccess: _onSuccess,
-                          onFail: _onFail);
-                    }
-                  },
-                  child: Text(
-                    "Criar Conta",
-                    textAlign: TextAlign.center,
-                  ),
-                  color: Theme.of(context).primaryColor,
+                SizedBox(height: 16,),
+                StaggerAnimation (
+                  controller: _controller,
+                  textoButton: "Cadastrar",
+                  cor: Theme.of(context).primaryColor,
                 ),
               ],
             ),
@@ -184,6 +167,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
         },
       ),
     );
+  }
+
+  _saveProfile () async {
+    if (_formKey.currentState.validate()) {
+      Map<String, double> pos = Map();
+      await getLocation().then((position) {
+        pos["latitude"] = position.latitude;
+        pos["longitude"] = position.longitude;
+      });
+      Map<String, dynamic> user = {
+        "name": _nameController.text,
+        "address": _addressController.text,
+        "email": _emailController.text,
+        "profilePhoto": profilePhoto,
+        "city": _cityController.text,
+        "currentLocation": pos,
+      };
+      await UserModel.of(context).signUp(
+          userData: user,
+          email: _emailController.text,
+          passwd: _passwdController.text,
+          onSuccess: _onSuccess,
+          onFail: _onFail);
+    }
   }
 
   void _onSuccess() {
@@ -205,4 +212,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
       duration: Duration(seconds: 3),
     ));
   }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 }
+
+/*
+* floatingActionButton: FloatingActionButton.extended(
+          onPressed: _saveProfile,
+          icon: Icon(Icons.update),
+          label: Text('Atualizar conta')),
+* */

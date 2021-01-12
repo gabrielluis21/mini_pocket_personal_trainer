@@ -80,7 +80,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           Divider(color: isDarkTheme ? Colors.white : Colors.black,),
-          FlatButton(
+         /* FlatButton(
             padding: EdgeInsets.all(6.0),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
@@ -99,7 +99,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ],
             ),
           ),
-          Divider(color: isDarkTheme ? Colors.white : Colors.black,),
+          Divider(color: isDarkTheme ? Colors.white : Colors.black,),*/
           FlatButton(
             padding: EdgeInsets.all(6.0),
             onPressed: () {
