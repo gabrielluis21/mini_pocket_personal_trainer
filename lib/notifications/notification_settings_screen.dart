@@ -5,7 +5,7 @@ import 'package:mini_pocket_personal_trainer/models/user_model.dart';
 import 'package:mini_pocket_personal_trainer/notifications/notification_service.dart';
 
 class NotificationsSettingsScreen extends StatefulWidget {
-  UserModel _user;
+  final UserModel _user;
 
   NotificationsSettingsScreen(this._user);
 

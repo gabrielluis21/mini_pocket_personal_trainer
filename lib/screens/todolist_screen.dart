@@ -14,6 +14,7 @@ import 'package:mini_pocket_personal_trainer/screens/timer_screen.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ToDoListScreen extends StatefulWidget {
+
   @override
   _ToDoListScreenState createState() => _ToDoListScreenState();
 }
@@ -168,7 +169,7 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        FlatButton(
+                        TextButton(
                             child: Container(
                               padding: EdgeInsets.all(10.0),
                               child: Column(
@@ -184,7 +185,7 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                                   builder: (context) =>
                                       ExerciseScreen(exercise.exerciseData)));
                             }),
-                        FlatButton(
+                        TextButton(
                           child: Container(
                             padding: EdgeInsets.all(10.0),
                             child: Column(
@@ -200,7 +201,7 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                                 builder: (context) => TimerScreen(exercise)));
                           },
                         ),
-                        FlatButton(
+                        TextButton(
                             child: Container(
                               padding: EdgeInsets.all(10.0),
                               child: Column(

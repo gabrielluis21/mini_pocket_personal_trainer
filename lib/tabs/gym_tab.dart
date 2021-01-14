@@ -15,7 +15,8 @@ class GymTab extends StatelessWidget {
           String cityUser = model.user["city"];
 
           return FutureBuilder<QuerySnapshot>(
-            future: FirebaseFirestore.instance.collection("academia").get(),
+            future: FirebaseFirestore.instance.collection("academia")
+                .where('city', isEqualTo: cityUser).get(),
             builder: (context, snapshot) {
               if (!snapshot.hasData)
                 return Center(

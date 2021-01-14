@@ -7,7 +7,7 @@ import 'package:scoped_model/scoped_model.dart';
 class ExercisesModel extends Model {
   UserModel user;
 
-  List<UserExercises> exercises = List();
+  List<UserExercises> exercises = List<UserExercises>.empty();
 
   ExercisesModel(this.user);
 

@@ -19,7 +19,7 @@ class NotificationServices {
     _messaging = null;
   }
 
-  bool NotificationsIsActivated() {
+  bool notificationsIsActivated() {
     return _isActivated != null;
   }
 

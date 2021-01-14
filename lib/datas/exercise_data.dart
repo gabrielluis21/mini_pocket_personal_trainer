@@ -21,6 +21,7 @@ class ExerciseData {
     category = exercise["category"];
     name = exercise["name"];
     description = exercise["description"];
+    images = exercise["images"];
   }
 
   Map<String, dynamic> toResumeMap() {
